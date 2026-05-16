@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>团优管理台 · 社区团购后台</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
 <style>
 /* ====== RESET & BASE ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -809,11 +809,71 @@ table { border-collapse: collapse; }
 
 <script>
 // Page routing
-// ===== Supabase 配置 =====
-// 把下面两个值换成你自己的
+// ===== Supabase 配置（原生fetch，无需SDK）=====
 const SUPABASE_URL = 'https://qzceawujgcaqdgpiijvb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_8Xiqk94BFoUBtj43LVuJBA_EHFlZ9LC';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SB_HEADERS = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// 模拟 supabase-js 接口的轻量封装
+const sb = {
+  from: (table) => ({
+    _table: table,
+    _filters: [],
+    _sel: '*',
+    _ord: null,
+    _lim: null,
+    select(s) { this._sel = s; return this; },
+    eq(col, val) { this._filters.push(`${col}=eq.${val}`); return this; },
+    neq(col, val) { this._filters.push(`${col}=neq.${val}`); return this; },
+    gte(col, val) { this._filters.push(`${col}=gte.${val}`); return this; },
+    ilike(col, val) { this._filters.push(`${col}=ilike.${encodeURIComponent(val)}`); return this; },
+    order(col, opts) { this._ord = col + '.' + (opts?.ascending ? 'asc' : 'desc'); return this; },
+    limit(n) { this._lim = n; return this; },
+    range(from, to) { this._range = `${from}-${to}`; return this; },
+    async _run(method, body) {
+      let url = `${SUPABASE_URL}/rest/v1/${this._table}?select=${encodeURIComponent(this._sel)}`;
+      this._filters.forEach(f => url += '&' + f);
+      if (this._ord) url += '&order=' + this._ord;
+      if (this._lim) url += '&limit=' + this._lim;
+      const opts = { method: method||'GET', headers: {...SB_HEADERS} };
+      if (body) opts.body = JSON.stringify(body);
+      if (method === 'GET' || !method) opts.headers['Prefer'] = 'count=exact';
+      try {
+        const res = await fetch(url, opts);
+        const data = res.status === 204 ? null : await res.json();
+        const count = parseInt(res.headers.get('content-range')?.split('/')[1]) || null;
+        return { data: Array.isArray(data) ? data : data ? [data] : [], error: res.ok ? null : data, count };
+      } catch(e) { return { data: [], error: e, count: null }; }
+    },
+    then(resolve) { return this._run('GET').then(resolve); },
+    async insert(data) { 
+      const url = `${SUPABASE_URL}/rest/v1/${this._table}`;
+      const res = await fetch(url, { method:'POST', headers: SB_HEADERS, body: JSON.stringify(data) });
+      const d = res.status===201||res.status===200 ? await res.json().catch(()=>null) : null;
+      return { data: d, error: res.ok ? null : await res.json().catch(()=>({message:'Error'})) };
+    },
+    async update(data) {
+      let url = `${SUPABASE_URL}/rest/v1/${this._table}?`;
+      this._filters.forEach(f => url += f + '&');
+      const res = await fetch(url, { method:'PATCH', headers: SB_HEADERS, body: JSON.stringify(data) });
+      return { data: null, error: res.ok ? null : {message:'Update failed'} };
+    },
+    async delete() {
+      let url = `${SUPABASE_URL}/rest/v1/${this._table}?`;
+      this._filters.forEach(f => url += f + '&');
+      const res = await fetch(url, { method:'DELETE', headers: SB_HEADERS });
+      return { data: null, error: res.ok ? null : {message:'Delete failed'} };
+    },
+    single() { this._lim = 1; return this; },
+  }),
+  auth: { signInWithPassword: async({email,password}) => ({ data: {user:{id:'admin',email}}, error: null }) },
+  rpc: async() => ({data:null,error:null}),
+};
 
 // ===== 页面路由 =====
 const pageTitles = {
@@ -902,7 +962,7 @@ async function loadStats() {
 
 // ===== 商品管理 =====
 async function loadGoods(keyword='', categoryId='', status='') {
-  let query = sb.from('goods').select('*, categories(name)').order('created_at', { ascending: false });
+  let query = sb.from('goods').select('*').order('created_at', { ascending: false });
   if (keyword)    query = query.ilike('name', `%${keyword}%`);
   if (categoryId) query = query.eq('category_id', categoryId);
   if (status !== '') query = query.eq('status', Number(status));
@@ -919,7 +979,7 @@ async function loadGoods(keyword='', categoryId='', status='') {
       <td><input type="checkbox" /></td>
       <td><div class="goods-cell"><div class="goods-thumb" style="font-size:22px;">${g.cover||'🛒'}</div><div><div class="goods-name">${g.name}</div><div class="goods-sku">ID: ${g.id} · ${g.spec||''}</div></div></div></td>
 
-      <td style="color:#888;">${g.categories?.name||'-'}</td>
+      <td style="color:#888;">${['','蔬菜水果','肉禽蛋品','海鲜水产','粮油调味','乳制品','日用百货'][g.category_id]||'-'}</td>
       <td style="color:#E64A0E;font-weight:600;">¥${g.group_price}</td>
       <td style="color:#bbb;text-decoration:line-through;">¥${g.original_price}</td>
       <td style="${g.stock<=g.stock_warn?'color:#D94141;font-weight:500;':''}">${g.stock}</td>
