@@ -812,7 +812,7 @@ table { border-collapse: collapse; }
 // ===== Supabase 配置 =====
 // 把下面两个值换成你自己的
 const SUPABASE_URL = 'https://qzceawujgcaqdgpiijvb.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_8Xiqk94BFoUBtj43LVuJBA_EHFlZ9LC';
+const SUPABASE_KEY = '这里填你的anon_publishable_key';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ===== 页面路由 =====
@@ -918,6 +918,7 @@ async function loadGoods(keyword='', categoryId='', status='') {
     <tr>
       <td><input type="checkbox" /></td>
       <td><div class="goods-cell"><div class="goods-thumb" style="font-size:22px;">${g.cover||'🛒'}</div><div><div class="goods-name">${g.name}</div><div class="goods-sku">ID: ${g.id} · ${g.spec||''}</div></div></div></td>
+
       <td style="color:#888;">${g.categories?.name||'-'}</td>
       <td style="color:#E64A0E;font-weight:600;">¥${g.group_price}</td>
       <td style="color:#bbb;text-decoration:line-through;">¥${g.original_price}</td>
@@ -930,6 +931,7 @@ async function loadGoods(keyword='', categoryId='', status='') {
         ${g.status==1
           ? `<button class="act-btn act-del" onclick="toggleGoods(${g.id},0)">下架</button>`
           : `<button class="act-btn act-on" onclick="toggleGoods(${g.id},1)">上架</button>`}
+        <button class="act-btn" style="border-color:#A32D2D;color:#A32D2D;" onclick="deleteGoods(${g.id},'${g.name.replace(/'/g,'')}')">删除</button>
       </div></td>
     </tr>`).join('');
 }
@@ -937,6 +939,14 @@ async function loadGoods(keyword='', categoryId='', status='') {
 async function toggleGoods(id, newStatus) {
   const { error } = await sb.from('goods').update({ status: newStatus }).eq('id', id);
   if (error) { alert('操作失败: ' + error.message); return; }
+  loadGoods();
+}
+
+async function deleteGoods(id, name) {
+  if (!confirm('确认永久删除商品「' + name + '」？\n此操作不可恢复！')) return;
+  const { error } = await sb.from('goods').delete().eq('id', id);
+  if (error) { alert('删除失败: ' + error.message); return; }
+  alert('已删除');
   loadGoods();
 }
 
