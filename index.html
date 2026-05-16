@@ -372,12 +372,23 @@ table { border-collapse: collapse; }
         <div class="toolbar">
           <div class="search-wrap">
             <span class="search-icon">🔍</span>
-            <input placeholder="搜索商品名称、SKU…" />
+            <input id="goods-search" placeholder="搜索商品名称…" oninput="loadGoods()" />
           </div>
-          <select class="filter-sel"><option>全部分类</option><option>蔬菜水果</option><option>肉禽蛋品</option><option>海鲜水产</option><option>粮油调味</option><option>乳制品</option></select>
-          <select class="filter-sel"><option>全部状态</option><option>上架中</option><option>已下架</option><option>售罄</option></select>
+          <select id="goods-category" class="filter-sel" onchange="loadGoods()">
+            <option value="">全部分类</option>
+            <option value="1">蔬菜水果</option>
+            <option value="2">肉禽蛋品</option>
+            <option value="3">海鲜水产</option>
+            <option value="4">粮油调味</option>
+            <option value="5">乳制品</option>
+            <option value="6">日用百货</option>
+          </select>
+          <select id="goods-status" class="filter-sel" onchange="loadGoods()">
+            <option value="">全部状态</option>
+            <option value="1">上架中</option>
+            <option value="0">已下架</option>
+          </select>
           <div style="margin-left:auto;display:flex;gap:6px;">
-            <button class="btn btn-sm">批量下架</button>
             <button class="btn btn-sm btn-primary btn-icon" onclick="goPage('addgoods')">+ 上架商品</button>
           </div>
         </div>
@@ -456,7 +467,7 @@ table { border-collapse: collapse; }
             </tbody>
           </table>
         </div>
-        <div class="pager"><span class="pager-info">共 48 件商品</span><div class="pager-btns"><button class="pager-btn">‹</button><button class="pager-btn active">1</button><button class="pager-btn">2</button><button class="pager-btn">3</button><button class="pager-btn">›</button></div></div>
+        <div class="pager"><span id="goods-count" class="pager-info">加载中…</span><div class="pager-btns"><button class="pager-btn">‹</button><button class="pager-btn active">1</button><button class="pager-btn">2</button><button class="pager-btn">3</button><button class="pager-btn">›</button></div></div>
       </div>
 
       <!-- ========== ADD GOODS ========== -->
@@ -961,39 +972,55 @@ async function loadStats() {
 }
 
 // ===== 商品管理 =====
-async function loadGoods(keyword='', categoryId='', status='') {
+async function loadGoods() {
+  const keyword = document.querySelector('#goods-search')?.value?.trim() || '';
+  const categoryId = document.querySelector('#goods-category')?.value || '';
+  const statusVal = document.querySelector('#goods-status')?.value || '';
+  
   let query = sb.from('goods').select('*').order('created_at', { ascending: false });
-  if (keyword)    query = query.ilike('name', `%${keyword}%`);
+  if (keyword) query = query.ilike('name', '%' + keyword + '%');
   if (categoryId) query = query.eq('category_id', categoryId);
-  if (status !== '') query = query.eq('status', Number(status));
+  if (statusVal !== '') query = query.eq('status', Number(statusVal));
+  
   const { data, error } = await query;
   if (error) { console.error(error); return; }
   const tbody = document.querySelector('#page-goods .data-table tbody');
   if (!tbody) return;
   if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:#999;">暂无商品，点击右上角上架商品</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:#999;">暂无商品</td></tr>';
+    document.querySelector('#goods-count').textContent = '共 0 件商品';
     return;
   }
-  tbody.innerHTML = data.map(g => `
-    <tr>
-      <td><input type="checkbox" /></td>
-      <td><div class="goods-cell"><div class="goods-thumb" style="font-size:22px;">${g.cover||'🛒'}</div><div><div class="goods-name">${g.name}</div><div class="goods-sku">ID: ${g.id} · ${g.spec||''}</div></div></div></td>
-
-      <td style="color:#888;">${['','蔬菜水果','肉禽蛋品','海鲜水产','粮油调味','乳制品','日用百货'][g.category_id]||'-'}</td>
+  const catNames = ['','蔬菜水果','肉禽蛋品','海鲜水产','粮油调味','乳制品','日用百货'];
+  tbody.innerHTML = data.map(g => {
+    const statusBadge = g.status==1
+      ? '<span class="badge badge-success">上架中</span>'
+      : g.stock==0
+        ? '<span class="badge badge-danger">售罄</span>'
+        : '<span class="badge badge-gray">已下架</span>';
+    const toggleBtn = g.status==1
+      ? `<button class="act-btn act-del" onclick="toggleGoods(${g.id},0)">下架</button>`
+      : `<button class="act-btn act-on" onclick="toggleGoods(${g.id},1)">上架</button>`;
+    const safeName = g.name.replace(/'/g,'').replace(/"/g,'');
+    return `<tr>
+      <td><input type="checkbox"/></td>
+      <td><div class="goods-cell"><div class="goods-thumb" style="font-size:22px;">🛒</div><div><div class="goods-name">${g.name}</div><div class="goods-sku">ID:${g.id} · ${g.spec||''}</div></div></div></td>
+      <td style="color:#888;">${catNames[g.category_id]||'-'}</td>
       <td style="color:#E64A0E;font-weight:600;">¥${g.group_price}</td>
       <td style="color:#bbb;text-decoration:line-through;">¥${g.original_price}</td>
-      <td style="${g.stock<=g.stock_warn?'color:#D94141;font-weight:500;':''}">${g.stock}</td>
+      <td style="${g.stock<=(g.stock_warn||20)?'color:#D94141;font-weight:500;':''}">${g.stock}</td>
       <td>${g.sold_count||0}</td>
-      <td>${g.status==1?'<span class="badge badge-success">上架中</span>':g.stock==0?'<span class="badge badge-danger">售罄</span>':'<span class="badge badge-gray">已下架</span>'}</td>
+      <td>${statusBadge}</td>
       <td style="color:#bbb;font-size:12px;">${new Date(g.created_at).toLocaleDateString()}</td>
       <td><div class="action-btns">
         <button class="act-btn act-edit" onclick="editGoods(${g.id})">编辑</button>
-        ${g.status==1
-          ? `<button class="act-btn act-del" onclick="toggleGoods(${g.id},0)">下架</button>`
-          : `<button class="act-btn act-on" onclick="toggleGoods(${g.id},1)">上架</button>`}
-        <button class="act-btn" style="border-color:#A32D2D;color:#A32D2D;" onclick="deleteGoods(${g.id},'${g.name.replace(/'/g,'')}')">删除</button>
+        <button class="act-btn act-on" style="border-color:#0F6E56;color:#0F6E56;" onclick="startGroup(${g.id},'${safeName}')">拼团</button>
+        ${toggleBtn}
+        <button class="act-btn act-del" onclick="deleteGoods(${g.id},'${safeName}')">删除</button>
       </div></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+  document.querySelector('#goods-count').textContent = '共 ' + data.length + ' 件商品';
 }
 
 async function toggleGoods(id, newStatus) {
@@ -1012,6 +1039,11 @@ async function deleteGoods(id, name) {
 
 function editGoods(id) {
   alert('编辑商品 ID: ' + id + '\n（完整编辑功能开发中）');
+}
+
+function startGroup(goodsId, goodsName) {
+  if (!confirm('为商品「' + goodsName + '」创建拼团活动？')) return;
+  alert('拼团功能需要用户在小程序端发起，后台可在「拼团活动」页面查看和管理。');
 }
 
 // ===== 上架商品 =====
