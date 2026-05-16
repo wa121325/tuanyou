@@ -1024,17 +1024,23 @@ async function loadGoods() {
 }
 
 async function toggleGoods(id, newStatus) {
-  const { error } = await sb.from('goods').update({ status: newStatus }).eq('id', id);
-  if (error) { alert('操作失败: ' + error.message); return; }
-  loadGoods();
+  const res = await fetch(SUPABASE_URL + '/rest/v1/goods?id=eq.' + id, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({ status: newStatus })
+  });
+  if (res.ok) loadGoods();
+  else alert('操作失败: ' + res.status);
 }
 
 async function deleteGoods(id, name) {
-  if (!confirm('确认永久删除商品「' + name + '」？\n此操作不可恢复！')) return;
-  const { error } = await sb.from('goods').delete().eq('id', id);
-  if (error) { alert('删除失败: ' + error.message); return; }
-  alert('已删除');
-  loadGoods();
+  if (!confirm('确认永久删除「' + name + '」？\n此操作不可恢复！')) return;
+  const res = await fetch(SUPABASE_URL + '/rest/v1/goods?id=eq.' + id, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Prefer': 'return=minimal' }
+  });
+  if (res.ok) { alert('已删除'); loadGoods(); }
+  else { alert('删除失败: ' + res.status); }
 }
 
 function editGoods(id) {
