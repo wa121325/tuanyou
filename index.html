@@ -869,16 +869,16 @@ const sb = {
       return { data: d, error: res.ok ? null : await res.json().catch(()=>({message:'Error'})) };
     },
     async update(data) {
-      let url = `${SUPABASE_URL}/rest/v1/${this._table}?`;
-      this._filters.forEach(f => url += f + '&');
-      const res = await fetch(url, { method:'PATCH', headers: SB_HEADERS, body: JSON.stringify(data) });
-      return { data: null, error: res.ok ? null : {message:'Update failed'} };
+      if (this._filters.length === 0) { return { data: null, error: {message:'安全限制：更新必须指定条件'} }; }
+      let url = SUPABASE_URL + '/rest/v1/' + this._table + '?' + this._filters.join('&');
+      const res = await fetch(url, { method:'PATCH', headers: {...SB_HEADERS, 'Prefer':'return=minimal'}, body: JSON.stringify(data) });
+      return { data: null, error: res.ok ? null : {message:'Update failed: ' + res.status} };
     },
     async delete() {
-      let url = `${SUPABASE_URL}/rest/v1/${this._table}?`;
-      this._filters.forEach(f => url += f + '&');
-      const res = await fetch(url, { method:'DELETE', headers: SB_HEADERS });
-      return { data: null, error: res.ok ? null : {message:'Delete failed'} };
+      if (this._filters.length === 0) { return { data: null, error: {message:'安全限制：删除必须指定条件'} }; }
+      let url = SUPABASE_URL + '/rest/v1/' + this._table + '?' + this._filters.join('&');
+      const res = await fetch(url, { method:'DELETE', headers: {...SB_HEADERS, 'Prefer':'return=minimal'} });
+      return { data: null, error: res.ok ? null : {message:'Delete failed: ' + res.status} };
     },
     single() { this._lim = 1; return this; },
   }),
