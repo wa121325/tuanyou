@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>团优管理台 · 社区团购后台</title>
-
+<title>大姚优鲜 · 管理后台</title>
 <style>
-/* ====== RESET & BASE ====== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif; background: #F5F5F5; color: #333; font-size: 14px; height: 100vh; overflow: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; background: #F5F5F5; color: #333; font-size: 14px; height: 100vh; overflow: hidden; }
 a { text-decoration: none; color: inherit; }
 input, select, textarea, button { font-family: inherit; font-size: inherit; outline: none; }
 button { cursor: pointer; }
@@ -16,889 +14,688 @@ table { border-collapse: collapse; }
 
 /* ====== LAYOUT ====== */
 .layout { display: flex; height: 100vh; }
-.sidebar { width: 220px; background: #fff; border-right: 1px solid #EBEBEB; display: flex; flex-direction: column; flex-shrink: 0; z-index: 100; }
+.sidebar { width: 220px; background: #fff; border-right: 1px solid #EBEBEB; display: flex; flex-direction: column; flex-shrink: 0; }
 .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .topbar { height: 54px; background: #fff; border-bottom: 1px solid #EBEBEB; display: flex; align-items: center; padding: 0 24px; gap: 12px; flex-shrink: 0; }
 .content-area { flex: 1; overflow-y: auto; padding: 20px 24px; }
 
 /* ====== SIDEBAR ====== */
-.logo { padding: 18px 16px; border-bottom: 1px solid #EBEBEB; display: flex; align-items: center; gap: 10px; }
-.logo-icon { width: 32px; height: 32px; background: #E64A0E; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.logo { padding: 16px; border-bottom: 1px solid #EBEBEB; display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 34px; height: 34px; background: #E02020; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 700; flex-shrink: 0; }
 .logo-text { font-size: 15px; font-weight: 600; }
 .logo-sub { font-size: 11px; color: #999; margin-top: 1px; }
 
-.nav-body { flex: 1; padding: 12px 10px; overflow-y: auto; }
-.nav-section { font-size: 11px; color: #bbb; padding: 10px 8px 4px; letter-spacing: 0.05em; }
-.nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: #666; margin-bottom: 1px; transition: background 0.12s; }
+.nav-body { flex: 1; padding: 10px 10px; overflow-y: auto; }
+.nav-section { font-size: 11px; color: #bbb; padding: 10px 8px 4px; letter-spacing: 0.05em; text-transform: uppercase; }
+.nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: #666; margin-bottom: 2px; transition: background 0.12s; font-size: 13px; }
 .nav-item:hover { background: #F5F5F5; }
-.nav-item.active { background: #FFF3EE; color: #C23B0A; font-weight: 500; }
-.nav-item svg { flex-shrink: 0; }
-.nav-badge { margin-left: auto; background: #E64A0E; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
+.nav-item.active { background: #FFF0F0; color: #C01010; font-weight: 500; }
+.nav-item svg { flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; }
+.nav-badge { margin-left: auto; background: #E02020; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
 
 .sidebar-user { padding: 14px 16px; border-top: 1px solid #EBEBEB; display: flex; align-items: center; gap: 10px; }
-.user-avatar { width: 32px; height: 32px; background: #FFF3EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #E64A0E; font-weight: 600; font-size: 13px; flex-shrink: 0; }
+.user-avatar { width: 32px; height: 32px; background: #FFF0F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #E02020; font-weight: 600; font-size: 13px; flex-shrink: 0; }
 .user-name { font-size: 13px; font-weight: 500; }
 .user-role { font-size: 11px; color: #999; }
-.logout-btn { margin-left: auto; color: #bbb; cursor: pointer; font-size: 13px; }
-.logout-btn:hover { color: #E64A0E; }
+.logout-btn { margin-left: auto; color: #bbb; cursor: pointer; }
+.logout-btn:hover { color: #E02020; }
 
 /* ====== TOPBAR ====== */
 .topbar-title { font-size: 16px; font-weight: 600; }
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .topbar-date { font-size: 12px; color: #999; }
-.notif-btn { position: relative; cursor: pointer; color: #666; font-size: 16px; }
-.notif-dot { position: absolute; top: -3px; right: -4px; width: 14px; height: 14px; background: #E64A0E; border-radius: 7px; font-size: 9px; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+.notif-btn { position: relative; cursor: pointer; font-size: 18px; }
+.notif-dot { position: absolute; top: -3px; right: -4px; width: 14px; height: 14px; background: #E02020; border-radius: 7px; font-size: 9px; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; }
 
 /* ====== BUTTONS ====== */
-.btn { padding: 7px 16px; border-radius: 7px; font-size: 13px; border: 1px solid #DDD; background: #fff; color: #555; cursor: pointer; transition: all 0.1s; }
+.btn { padding: 7px 16px; border-radius: 7px; font-size: 13px; border: 1px solid #DDD; background: #fff; color: #555; cursor: pointer; transition: all 0.1s; display: inline-flex; align-items: center; gap: 5px; }
 .btn:hover { background: #F5F5F5; }
-.btn-primary { background: #E64A0E; color: #fff; border-color: #E64A0E; }
-.btn-primary:hover { background: #C23B0A; border-color: #C23B0A; }
+.btn-primary { background: #E02020; color: #fff; border-color: #E02020; }
+.btn-primary:hover { background: #C01010; border-color: #C01010; }
+.btn-success { background: #2E7D32; color: #fff; border-color: #2E7D32; }
 .btn-sm { padding: 5px 12px; font-size: 12px; }
-.btn-icon { display: flex; align-items: center; gap: 5px; }
 
 /* ====== STAT CARDS ====== */
 .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
 .stat-card { background: #fff; border-radius: 10px; padding: 16px 18px; border: 1px solid #EBEBEB; }
-.stat-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 18px; }
+.stat-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 20px; }
 .stat-label { font-size: 12px; color: #999; margin-bottom: 5px; }
 .stat-value { font-size: 26px; font-weight: 600; color: #222; line-height: 1; }
 .stat-trend { font-size: 12px; margin-top: 6px; }
-.trend-up { color: #2E9B5E; }
-.trend-down { color: #D94141; }
-.trend-neutral { color: #999; }
+.trend-up { color: #2E7D32; } .trend-down { color: #C62828; } .trend-neutral { color: #999; }
 
 /* ====== PANELS ====== */
-.panel { background: #fff; border-radius: 10px; border: 1px solid #EBEBEB; overflow: hidden; }
+.panel { background: #fff; border-radius: 10px; border: 1px solid #EBEBEB; overflow: hidden; margin-bottom: 14px; }
 .panel-header { padding: 14px 18px; border-bottom: 1px solid #EBEBEB; display: flex; align-items: center; justify-content: space-between; }
 .panel-title { font-size: 14px; font-weight: 600; }
-.panel-more { font-size: 12px; color: #999; cursor: pointer; }
-.panel-more:hover { color: #E64A0E; }
+.panel-more { font-size: 12px; color: #999; cursor: pointer; } .panel-more:hover { color: #E02020; }
 .panel-body { padding: 16px 18px; }
 
-/* ====== TABLES ====== */
+/* ====== TABLE ====== */
 .table-wrap { background: #fff; border-radius: 10px; border: 1px solid #EBEBEB; overflow: hidden; }
 .data-table { width: 100%; }
 .data-table th { background: #FAFAFA; padding: 10px 14px; text-align: left; font-weight: 500; font-size: 12px; color: #888; border-bottom: 1px solid #EBEBEB; white-space: nowrap; }
 .data-table td { padding: 11px 14px; border-bottom: 1px solid #F5F5F5; font-size: 13px; vertical-align: middle; }
 .data-table tbody tr:last-child td { border-bottom: none; }
-.data-table tbody tr:hover td { background: #FFFAF8; }
+.data-table tbody tr:hover td { background: #FFFAFA; }
 
 /* ====== GOODS CELL ====== */
 .goods-cell { display: flex; align-items: center; gap: 10px; }
 .goods-thumb { width: 40px; height: 40px; border-radius: 8px; background: #F8F8F8; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-.goods-name { font-weight: 500; font-size: 13px; max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.goods-sku { font-size: 11px; color: #bbb; }
+.goods-name { font-weight: 500; font-size: 13px; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.goods-sku { font-size: 11px; color: #bbb; margin-top: 2px; }
 
 /* ====== BADGES ====== */
-.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 500; }
-.badge-success { background: #EAF5E4; color: #266B1A; }
-.badge-warn { background: #FFF3E0; color: #8A4E00; }
-.badge-info { background: #E8F1FD; color: #1855A0; }
-.badge-danger { background: #FDEEEE; color: #A32020; }
-.badge-gray { background: #F0F0F0; color: #777; }
+.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.badge-success { background: #EAF5E4; color: #1B5E20; }
+.badge-warn    { background: #FFF3E0; color: #7B3B00; }
+.badge-info    { background: #E3F2FD; color: #0D47A1; }
+.badge-danger  { background: #FFEBEE; color: #B71C1C; }
+.badge-purple  { background: #EDE7F6; color: #4527A0; }
+.badge-gray    { background: #F0F0F0; color: #777; }
 
 /* ====== ACTION BUTTONS ====== */
 .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; }
 .act-btn { padding: 3px 9px; border-radius: 5px; font-size: 11px; border: 1px solid #DDD; color: #666; cursor: pointer; background: transparent; white-space: nowrap; }
 .act-btn:hover { background: #F5F5F5; }
-.act-edit { border-color: #185FA5; color: #185FA5; }
-.act-edit:hover { background: #E8F1FD; }
-.act-del { border-color: #A32D2D; color: #A32D2D; }
-.act-del:hover { background: #FDEEEE; }
-.act-on { border-color: #0F6E56; color: #0F6E56; }
-.act-on:hover { background: #EAF5E4; }
-.act-warn { border-color: #E64A0E; color: #E64A0E; }
-.act-warn:hover { background: #FFF3EE; }
+.act-edit   { border-color: #185FA5; color: #185FA5; } .act-edit:hover   { background: #E3F2FD; }
+.act-del    { border-color: #B71C1C; color: #B71C1C; } .act-del:hover    { background: #FFEBEE; }
+.act-on     { border-color: #1B5E20; color: #1B5E20; } .act-on:hover     { background: #EAF5E4; }
+.act-warn   { border-color: #E02020; color: #E02020; } .act-warn:hover   { background: #FFF0F0; }
+.act-purple { border-color: #4527A0; color: #4527A0; } .act-purple:hover { background: #EDE7F6; }
 
 /* ====== TOOLBAR ====== */
-.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 .search-wrap { position: relative; }
-.search-wrap input { padding: 7px 12px 7px 34px; border: 1px solid #DDD; border-radius: 7px; font-size: 13px; width: 220px; color: #333; background: #fff; }
-.search-wrap input:focus { border-color: #E64A0E; }
-.search-wrap .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #bbb; font-size: 15px; }
+.search-wrap input { padding: 7px 12px 7px 34px; border: 1px solid #DDD; border-radius: 7px; font-size: 13px; width: 220px; background: #fff; }
+.search-wrap input:focus { border-color: #E02020; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #bbb; }
 .filter-sel { padding: 7px 10px; border: 1px solid #DDD; border-radius: 7px; font-size: 13px; color: #555; background: #fff; cursor: pointer; }
-.filter-sel:focus { border-color: #E64A0E; }
+.filter-sel:focus { border-color: #E02020; }
 
-/* ====== PROGRESS BAR ====== */
-.progress-wrap { background: #F0F0F0; border-radius: 4px; height: 7px; width: 90px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 4px; background: #E64A0E; }
-
-/* ====== MINI CHART ====== */
-.bar-chart { display: flex; align-items: flex-end; gap: 5px; height: 90px; }
-.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.bar-rect { width: 100%; border-radius: 4px 4px 0 0; background: #E64A0E; opacity: 0.8; }
-.bar-col.today .bar-rect { opacity: 1; background: #C23B0A; }
-.bar-lbl { font-size: 10px; color: #bbb; }
-.bar-col.today .bar-lbl { color: #E64A0E; font-weight: 500; }
+/* ====== ORDER TABS ====== */
+.order-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.order-tab { padding: 6px 16px; border-radius: 20px; font-size: 13px; border: 1px solid #DDD; color: #666; cursor: pointer; white-space: nowrap; }
+.order-tab.active { background: #E02020; color: #fff; border-color: #E02020; }
+.order-tab:hover:not(.active) { background: #F5F5F5; }
 
 /* ====== FORM ====== */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form-col { grid-column: 1 / -1; }
 .form-group { display: flex; flex-direction: column; gap: 5px; }
 .form-label { font-size: 12px; font-weight: 500; color: #555; }
+.form-label .req { color: #E02020; }
 .form-input { padding: 9px 12px; border: 1px solid #DDD; border-radius: 7px; font-size: 13px; color: #333; background: #fff; }
-.form-input:focus { border-color: #E64A0E; }
-.form-input[type=number] { -moz-appearance: textfield; }
-.form-hint { font-size: 11px; color: #bbb; margin-top: 2px; }
-.upload-box { border: 1.5px dashed #DDD; border-radius: 8px; padding: 28px; text-align: center; color: #bbb; cursor: pointer; transition: all 0.15s; }
-.upload-box:hover { border-color: #E64A0E; color: #E64A0E; background: #FFFAF8; }
-.upload-icon { font-size: 28px; margin-bottom: 8px; }
+.form-input:focus { border-color: #E02020; }
+.form-hint { font-size: 11px; color: #bbb; }
 .form-footer { display: flex; justify-content: flex-end; gap: 8px; padding-top: 16px; margin-top: 16px; border-top: 1px solid #EBEBEB; }
+.upload-box { border: 1.5px dashed #DDD; border-radius: 8px; padding: 24px; text-align: center; color: #bbb; cursor: pointer; }
+.upload-box:hover { border-color: #E02020; color: #E02020; background: #FFF8F8; }
 
-/* ====== ORDER TABS ====== */
-.order-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
-.order-tab { padding: 6px 16px; border-radius: 20px; font-size: 13px; border: 1px solid #DDD; color: #666; cursor: pointer; }
-.order-tab.active { background: #E64A0E; color: #fff; border-color: #E64A0E; }
-.order-tab:hover:not(.active) { background: #F5F5F5; }
-
-/* ====== PAGINATION ====== */
+/* ====== PAGER ====== */
 .pager { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
 .pager-info { font-size: 12px; color: #999; }
 .pager-btns { display: flex; gap: 4px; }
 .pager-btn { padding: 5px 11px; border: 1px solid #DDD; border-radius: 5px; font-size: 12px; color: #555; cursor: pointer; background: #fff; }
-.pager-btn.active { background: #E64A0E; color: #fff; border-color: #E64A0E; }
+.pager-btn.active { background: #E02020; color: #fff; border-color: #E02020; }
 .pager-btn:hover:not(.active) { background: #F5F5F5; }
+
+/* ====== MINI CHART ====== */
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.bar-rect { width: 100%; border-radius: 4px 4px 0 0; background: #E02020; opacity: 0.75; }
+.bar-col.today .bar-rect { opacity: 1; background: #C01010; }
+.bar-lbl { font-size: 10px; color: #bbb; }
+.bar-col.today .bar-lbl { color: #E02020; font-weight: 500; }
+
+/* ====== MINI ORDER LIST ====== */
+.mini-order-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F5F5F5; }
+.mini-order-item:last-child { border-bottom: none; }
+.mo-id { font-size: 11px; font-weight: 600; color: #444; width: 86px; flex-shrink: 0; }
+.mo-name { flex: 1; font-size: 12px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mo-price { font-size: 13px; font-weight: 600; color: #E02020; width: 52px; text-align: right; flex-shrink: 0; }
+
+/* ====== ROW LAYOUT ====== */
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 
 /* ====== PAGE SWITCH ====== */
 .page { display: none; }
 .page.active { display: block; }
 
-/* ====== ROW LAYOUT ====== */
-.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-.row-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
-
-/* ====== MINI ORDER LIST ====== */
-.mini-order { display: flex; flex-direction: column; }
-.mini-order-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F5F5F5; }
-.mini-order-item:last-child { border-bottom: none; }
-.mo-id { font-size: 11px; font-weight: 600; color: #444; width: 80px; flex-shrink: 0; }
-.mo-name { flex: 1; font-size: 12px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mo-price { font-size: 13px; font-weight: 600; color: #E64A0E; width: 48px; text-align: right; flex-shrink: 0; }
-
-/* ====== GROUP DIST ====== */
-.dist-row { display: flex; gap: 10px; margin-bottom: 12px; }
-.dist-item { flex: 1; text-align: center; padding: 12px 6px; background: #F8F8F8; border-radius: 8px; }
-.dist-num { font-size: 22px; font-weight: 600; }
-.dist-label { font-size: 11px; color: #999; margin-top: 4px; }
+/* ====== STATUS PILL IN ORDER DETAIL ====== */
+.step-bar { display: flex; align-items: center; margin: 16px 0; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.step-circle { width: 28px; height: 28px; border-radius: 50%; background: #F0F0F0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #bbb; border: 2px solid #E0E0E0; }
+.step.done .step-circle { background: #E02020; border-color: #E02020; color: #fff; }
+.step-label { font-size: 11px; color: #bbb; }
+.step.done .step-label { color: #E02020; font-weight: 500; }
+.step-line { flex: 1; height: 2px; background: #E0E0E0; margin-bottom: 20px; }
+.step-line.done { background: #E02020; }
 </style>
 </head>
 <body>
 <div class="layout">
 
-  <!-- ====== SIDEBAR ====== -->
-  <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-icon">团</div>
-      <div>
-        <div class="logo-text">团优管理台</div>
-        <div class="logo-sub">社区团购后台系统</div>
-      </div>
+<!-- ====== SIDEBAR ====== -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">鲜</div>
+    <div>
+      <div class="logo-text">大姚优鲜</div>
+      <div class="logo-sub">社区超市管理后台</div>
+    </div>
+  </div>
+
+  <nav class="nav-body">
+    <div class="nav-section">概览</div>
+    <div class="nav-item active" data-page="dashboard">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      数据看板
     </div>
 
-    <nav class="nav-body">
-      <div class="nav-section">概览</div>
-      <div class="nav-item active" data-page="dashboard">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        数据看板
-      </div>
-
-      <div class="nav-section">商品运营</div>
-      <div class="nav-item" data-page="goods">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        商品管理
-      </div>
-      <div class="nav-item" data-page="addgoods">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        上架商品
-      </div>
-      <div class="nav-item" data-page="group">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        拼团活动
-      </div>
-      <div class="nav-item" data-page="flash">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        秒杀配置
-      </div>
-      <div class="nav-item" data-page="banner">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
-        Banner 管理
-      </div>
-
-      <div class="nav-section">订单物流</div>
-      <div class="nav-item" data-page="orders">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        订单管理
-        <span class="nav-badge">12</span>
-      </div>
-      <div class="nav-item" data-page="station">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        自提站点
-      </div>
-
-      <div class="nav-section">用户运营</div>
-      <div class="nav-item" data-page="users">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        用户管理
-      </div>
-      <div class="nav-item" data-page="coupon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        优惠券
-      </div>
-
-      <div class="nav-section">系统</div>
-      <div class="nav-item" data-page="settings">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        系统设置
-      </div>
-    </nav>
-
-    <div class="sidebar-user">
-      <div class="user-avatar">管</div>
-      <div>
-        <div class="user-name">超级管理员</div>
-        <div class="user-role">admin@tuanyou.com</div>
-      </div>
-      <div class="logout-btn" title="退出登录">⎋</div>
+    <div class="nav-section">商品</div>
+    <div class="nav-item" data-page="goods">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      商品管理
     </div>
-  </aside>
-
-  <!-- ====== MAIN ====== -->
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-title" id="topbar-title">数据看板</div>
-      <div class="topbar-right">
-        <div class="topbar-date" id="topbar-date"></div>
-        <div class="notif-btn" title="通知">
-          🔔
-          <span class="notif-dot">3</span>
-        </div>
-        <div id="topbar-action-area"></div>
-      </div>
+    <div class="nav-item" data-page="addgoods">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      上架商品
+    </div>
+    <div class="nav-item" data-page="banner">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+      Banner 管理
     </div>
 
-    <div class="content-area">
+    <div class="nav-section">订单配送</div>
+    <div class="nav-item" data-page="orders">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      订单管理
+      <span class="nav-badge" id="badge-pending">0</span>
+    </div>
+    <div class="nav-item" data-page="delivery">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="m16 8 4 1 3 4v3h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      配送管理
+    </div>
 
-      <!-- ========== DASHBOARD ========== -->
-      <div class="page active" id="page-dashboard">
-        <div class="stat-grid">
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#FFF3EE;">💰</div>
-            <div class="stat-label">今日营业额</div>
-            <div class="stat-value">¥12,480</div>
-            <div class="stat-trend trend-up">↑ 18.4% vs 昨日</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#E8F1FD;">📋</div>
-            <div class="stat-label">今日订单数</div>
-            <div class="stat-value">347</div>
-            <div class="stat-trend trend-up">↑ 24 单 vs 昨日</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#EAF5E4;">👥</div>
-            <div class="stat-label">拼团成功</div>
-            <div class="stat-value">89</div>
-            <div class="stat-trend trend-neutral">成团率 <b>92%</b></div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#FFF3E0;">🙋</div>
-            <div class="stat-label">新增用户</div>
-            <div class="stat-value">56</div>
-            <div class="stat-trend trend-down">↓ 3 vs 昨日</div>
-          </div>
+    <div class="nav-section">用户运营</div>
+    <div class="nav-item" data-page="users">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      用户管理
+    </div>
+    <div class="nav-item" data-page="coupon">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      优惠券
+    </div>
+
+    <div class="nav-section">系统</div>
+    <div class="nav-item" data-page="settings">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      系统设置
+    </div>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">管</div>
+    <div><div class="user-name">超级管理员</div><div class="user-role">大姚优鲜</div></div>
+    <div class="logout-btn" title="退出">⎋</div>
+  </div>
+</aside>
+
+<!-- ====== MAIN ====== -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">数据看板</div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="topbar-date"></div>
+      <div class="notif-btn" title="通知">🔔<span class="notif-dot" id="notif-count">0</span></div>
+      <div id="topbar-action-area"></div>
+    </div>
+  </div>
+
+  <div class="content-area">
+
+    <!-- ========== DASHBOARD ========== -->
+    <div class="page active" id="page-dashboard">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#FFF0F0;">💰</div>
+          <div class="stat-label">今日营业额</div>
+          <div class="stat-value" id="stat-revenue">¥—</div>
+          <div class="stat-trend trend-neutral" id="stat-revenue-trend">加载中…</div>
         </div>
-
-        <div class="row-2" style="margin-bottom:14px;">
-          <div class="panel">
-            <div class="panel-header">
-              <span class="panel-title">近7日销售额</span>
-              <span class="panel-more">详细报表 ›</span>
-            </div>
-            <div class="panel-body">
-              <div class="bar-chart">
-                <div class="bar-col"><div class="bar-rect" style="height:50px;"></div><div class="bar-lbl">周一</div></div>
-                <div class="bar-col"><div class="bar-rect" style="height:68px;"></div><div class="bar-lbl">周二</div></div>
-                <div class="bar-col"><div class="bar-rect" style="height:42px;"></div><div class="bar-lbl">周三</div></div>
-                <div class="bar-col"><div class="bar-rect" style="height:75px;"></div><div class="bar-lbl">周四</div></div>
-                <div class="bar-col"><div class="bar-rect" style="height:60px;"></div><div class="bar-lbl">周五</div></div>
-                <div class="bar-col"><div class="bar-rect" style="height:82px;"></div><div class="bar-lbl">周六</div></div>
-                <div class="bar-col today"><div class="bar-rect" style="height:90px;"></div><div class="bar-lbl">今日</div></div>
-              </div>
-              <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:#bbb;">
-                <span>¥0</span><span>¥6,240</span><span>¥12,480</span>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-header"><span class="panel-title">拼团状态分布</span></div>
-            <div class="panel-body">
-              <div class="dist-row">
-                <div class="dist-item"><div class="dist-num" style="color:#E64A0E;">23</div><div class="dist-label">进行中</div></div>
-                <div class="dist-item"><div class="dist-num" style="color:#2E9B5E;">89</div><div class="dist-label">已成团</div></div>
-                <div class="dist-item"><div class="dist-num" style="color:#999;">7</div><div class="dist-label">未成团</div></div>
-              </div>
-              <div style="font-size:12px;color:#888;margin-bottom:6px;">成团率</div>
-              <div class="progress-wrap" style="width:100%;height:10px;margin-bottom:4px;">
-                <div class="progress-fill" style="width:92%;"></div>
-              </div>
-              <div style="font-size:13px;font-weight:600;color:#E64A0E;">92%</div>
-              <div style="margin-top:14px;font-size:12px;color:#888;margin-bottom:8px;">库存预警（3件）</div>
-              <div style="display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:#555;">澳洲牛排 200g</span><span style="color:#D94141;font-weight:500;">售罄</span></div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:#555;">基围虾 500g</span><span style="color:#C17A00;font-weight:500;">库存 8 件</span></div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:#555;">有机牛乳 250ml</span><span style="color:#C17A00;font-weight:500;">库存 12 件</span></div>
-              </div>
-            </div>
-          </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#E3F2FD;">📋</div>
+          <div class="stat-label">今日订单</div>
+          <div class="stat-value" id="stat-orders">—</div>
+          <div class="stat-trend trend-neutral" id="stat-orders-trend">加载中…</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#FFF3E0;">🚚</div>
+          <div class="stat-label">待配送</div>
+          <div class="stat-value" id="stat-shipping">—</div>
+          <div class="stat-trend trend-neutral">送上门订单</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#EDE7F6;">🏪</div>
+          <div class="stat-label">待自提</div>
+          <div class="stat-value" id="stat-pickup">—</div>
+          <div class="stat-trend trend-neutral">到店自提订单</div>
+        </div>
+      </div>
 
+      <div class="row-2">
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">最新订单</span>
-            <span class="panel-more" onclick="goPage('orders')">全部订单 ›</span>
-          </div>
-          <div class="mini-order" style="padding:0 18px;">
-            <div class="mini-order-item"><span class="mo-id">#O-240128-001</span><span class="mo-name">有机西兰花 ×2, 赣南脐橙 ×1</span><span class="mo-price">¥41.7</span><span class="badge badge-warn">待付款</span></div>
-            <div class="mini-order-item"><span class="mo-id">#O-240128-002</span><span class="mo-name">澳洲牛排 200g ×1</span><span class="mo-price">¥39.0</span><span class="badge badge-info">拼团中</span></div>
-            <div class="mini-order-item"><span class="mo-id">#O-240127-089</span><span class="mo-name">云南高原蓝莓 125g×4</span><span class="mo-price">¥29.0</span><span class="badge badge-success">配送中</span></div>
-            <div class="mini-order-item"><span class="mo-id">#O-240127-077</span><span class="mo-name">有机小白菜 ×3袋</span><span class="mo-price">¥35.7</span><span class="badge badge-gray">已完成</span></div>
-          </div>
-          <div style="padding:12px 18px;"></div>
-        </div>
-      </div>
-
-      <!-- ========== GOODS ========== -->
-      <div class="page" id="page-goods">
-        <div class="toolbar">
-          <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input id="goods-search" placeholder="搜索商品名称…" oninput="loadGoods()" />
-          </div>
-          <select id="goods-category" class="filter-sel" onchange="loadGoods()">
-            <option value="">全部分类</option>
-            <option value="1">蔬菜水果</option>
-            <option value="2">肉禽蛋品</option>
-            <option value="3">海鲜水产</option>
-            <option value="4">粮油调味</option>
-            <option value="5">乳制品</option>
-            <option value="6">日用百货</option>
-          </select>
-          <select id="goods-status" class="filter-sel" onchange="loadGoods()">
-            <option value="">全部状态</option>
-            <option value="1">上架中</option>
-            <option value="0">已下架</option>
-          </select>
-          <div style="margin-left:auto;display:flex;gap:6px;">
-            <button class="btn btn-sm btn-primary btn-icon" onclick="goPage('addgoods')">+ 上架商品</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th style="width:36px;"><input type="checkbox" /></th>
-                <th>商品</th>
-                <th>分类</th>
-                <th>拼团价</th>
-                <th>原价</th>
-                <th>库存</th>
-                <th>已售</th>
-                <th>状态</th>
-                <th>更新时间</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td><div class="goods-cell"><div class="goods-thumb">🥦</div><div><div class="goods-name">有机西兰花</div><div class="goods-sku">SKU: VEG-001 · 500g/份</div></div></div></td>
-                <td style="color:#888;">蔬菜水果</td>
-                <td style="color:#E64A0E;font-weight:600;">¥8.9</td>
-                <td style="color:#bbb;text-decoration:line-through;">¥18</td>
-                <td>320</td><td>88</td>
-                <td><span class="badge badge-success">上架中</span></td>
-                <td style="color:#bbb;font-size:12px;">01-28 09:12</td>
-                <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on" onclick="goPage('group')">拼团</button><button class="act-btn act-del">下架</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td><div class="goods-cell"><div class="goods-thumb">🍊</div><div><div class="goods-name">赣南脐橙</div><div class="goods-sku">SKU: FRT-002 · 5斤装</div></div></div></td>
-                <td style="color:#888;">蔬菜水果</td>
-                <td style="color:#E64A0E;font-weight:600;">¥23.9</td>
-                <td style="color:#bbb;text-decoration:line-through;">¥45</td>
-                <td>150</td><td>42</td>
-                <td><span class="badge badge-success">上架中</span></td>
-                <td style="color:#bbb;font-size:12px;">01-27 16:30</td>
-                <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on">拼团</button><button class="act-btn act-del">下架</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td><div class="goods-cell"><div class="goods-thumb">🥩</div><div><div class="goods-name">澳洲牛排</div><div class="goods-sku">SKU: MEA-003 · 200g/块</div></div></div></td>
-                <td style="color:#888;">肉禽蛋品</td>
-                <td style="color:#E64A0E;font-weight:600;">¥39</td>
-                <td style="color:#bbb;text-decoration:line-through;">¥79</td>
-                <td style="color:#D94141;font-weight:500;">0</td><td>200</td>
-                <td><span class="badge badge-danger">售罄</span></td>
-                <td style="color:#bbb;font-size:12px;">01-26 11:00</td>
-                <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-warn">补货</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td><div class="goods-cell"><div class="goods-thumb">🫐</div><div><div class="goods-name">云南高原蓝莓</div><div class="goods-sku">SKU: FRT-004 · 125g×4盒</div></div></div></td>
-                <td style="color:#888;">蔬菜水果</td>
-                <td style="color:#E64A0E;font-weight:600;">¥29</td>
-                <td style="color:#bbb;text-decoration:line-through;">¥56</td>
-                <td>80</td><td>15</td>
-                <td><span class="badge badge-success">上架中</span></td>
-                <td style="color:#bbb;font-size:12px;">01-28 08:45</td>
-                <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on">拼团</button><button class="act-btn act-del">下架</button></div></td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td><div class="goods-cell"><div class="goods-thumb">🥛</div><div><div class="goods-name">有机纯牛奶</div><div class="goods-sku">SKU: DAI-005 · 250ml×12盒</div></div></div></td>
-                <td style="color:#888;">乳制品</td>
-                <td style="color:#E64A0E;font-weight:600;">¥16</td>
-                <td style="color:#bbb;text-decoration:line-through;">¥32</td>
-                <td>200</td><td>67</td>
-                <td><span class="badge badge-gray">已下架</span></td>
-                <td style="color:#bbb;font-size:12px;">01-25 14:22</td>
-                <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on">重新上架</button></div></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="pager"><span id="goods-count" class="pager-info">加载中…</span><div class="pager-btns"><button class="pager-btn">‹</button><button class="pager-btn active">1</button><button class="pager-btn">2</button><button class="pager-btn">3</button><button class="pager-btn">›</button></div></div>
-      </div>
-
-      <!-- ========== ADD GOODS ========== -->
-      <div class="page" id="page-addgoods">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">上架新商品</span>
+            <span class="panel-title">近7日销售额</span>
+            <span class="panel-more" onclick="goPage('orders')">订单详情 ›</span>
           </div>
           <div class="panel-body">
-            <div style="display:grid;grid-template-columns:1fr 220px;gap:20px;">
-              <div>
-                <div class="form-grid">
-                  <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">商品名称 *</label>
-                    <input id="f-name" class="form-input" placeholder="例：有机西兰花 500g 当日采摘" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">商品分类 *</label>
-                    <select id="f-category" class="form-input">
-                      <option value="1">蔬菜水果</option>
-                      <option value="2">肉禽蛋品</option>
-                      <option value="3">海鲜水产</option>
-                      <option value="4">粮油调味</option>
-                      <option value="5">乳制品</option>
-                      <option value="6">日用百货</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">规格/净含量</label>
-                    <input id="f-spec" class="form-input" placeholder="例：500g/份" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">原价（元）*</label>
-                    <input id="f-original-price" class="form-input" type="number" placeholder="18.00" step="0.01" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">拼团价（元）*</label>
-                    <input id="f-group-price" class="form-input" type="number" placeholder="8.90" step="0.01" />
-                    <div class="form-hint">拼团价需低于原价</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">初始库存 *</label>
-                    <input id="f-stock" class="form-input" type="number" placeholder="500" />
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">库存预警阈值</label>
-                    <input id="f-stock-warn" class="form-input" type="number" placeholder="20" />
-                    <div class="form-hint">低于此值时系统发出预警</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">成团人数 *</label>
-                    <select id="f-group-size" class="form-input">
-                      <option value="2">2人团</option>
-                      <option value="3" selected>3人团</option>
-                      <option value="5">5人团</option>
-                      <option value="10">10人团</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">拼团时限</label>
-                    <select id="f-group-hours" class="form-input">
-                      <option value="12">12小时</option>
-                      <option value="24" selected>24小时</option>
-                      <option value="48">48小时</option>
-                      <option value="72">72小时</option>
-                    </select>
-                  </div>
-                  <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">卖点标签</label>
-                    <input id="f-tags" class="form-input" placeholder="例：当日采摘, 有机认证, 产地直发（逗号分隔）" />
-                  </div>
-                  <div class="form-group" style="grid-column:1/-1;">
-                    <label class="form-label">商品详情</label>
-                    <textarea id="f-detail" class="form-input" rows="4" placeholder="产地、品质特点、储存方式、烹饪建议…"></textarea>
-                  </div>
+            <div class="bar-chart" id="weekly-chart">
+              <div class="bar-col"><div class="bar-rect" style="height:40px;"></div><div class="bar-lbl">加载</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:#bbb;">
+              <span>¥0</span><span id="chart-mid">—</span><span id="chart-max">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">库存预警</span><span class="panel-more" onclick="goPage('goods')">查看全部 ›</span></div>
+          <div class="panel-body" id="stock-warn-list">
+            <div style="color:#bbb;font-size:13px;">加载中…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">最新订单</span>
+          <span class="panel-more" onclick="goPage('orders')">全部订单 ›</span>
+        </div>
+        <div style="padding:0 18px;" id="latest-orders">
+          <div style="color:#bbb;padding:20px 0;font-size:13px;">加载中…</div>
+        </div>
+        <div style="height:12px;"></div>
+      </div>
+    </div>
+
+    <!-- ========== GOODS ========== -->
+    <div class="page" id="page-goods">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input id="goods-search" placeholder="搜索商品名称…" oninput="loadGoods()" />
+        </div>
+        <select id="goods-category" class="filter-sel" onchange="loadGoods()">
+          <option value="">全部分类</option>
+          <option value="1">蔬菜</option>
+          <option value="2">水果</option>
+          <option value="3">肉禽</option>
+          <option value="4">海鲜</option>
+          <option value="5">蛋奶</option>
+          <option value="6">粮油</option>
+          <option value="7">豆制品</option>
+          <option value="8">日用品</option>
+        </select>
+        <select id="goods-status" class="filter-sel" onchange="loadGoods()">
+          <option value="">全部状态</option>
+          <option value="1">上架中</option>
+          <option value="0">已下架</option>
+        </select>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button class="btn btn-sm btn-primary" onclick="goPage('addgoods')">+ 上架商品</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:36px;"><input type="checkbox" /></th>
+              <th>商品</th><th>分类</th><th>售价</th><th>划线价</th>
+              <th>单位</th><th>库存</th><th>已售</th><th>状态</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="goods-tbody">
+            <tr><td colspan="10" style="text-align:center;padding:40px;color:#999;">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span id="goods-count" class="pager-info">加载中…</span>
+        <div class="pager-btns">
+          <button class="pager-btn">‹</button>
+          <button class="pager-btn active">1</button>
+          <button class="pager-btn">›</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ADD GOODS ========== -->
+    <div class="page" id="page-addgoods">
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">上架新商品</span></div>
+        <div class="panel-body">
+          <div style="display:grid;grid-template-columns:1fr 200px;gap:20px;">
+            <div>
+              <div class="form-grid">
+                <div class="form-group" style="grid-column:1/-1;">
+                  <label class="form-label">商品名称 <span class="req">*</span></label>
+                  <input id="f-name" class="form-input" placeholder="例：有机西兰花 当日采摘" />
                 </div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:14px;">
                 <div class="form-group">
-                  <label class="form-label">商品主图 *</label>
-                  <div class="upload-box">
-                    <div class="upload-icon">📷</div>
-                    <div>点击上传主图</div>
-                    <div style="font-size:11px;margin-top:4px;">建议 800×800px · JPG/PNG</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">详情图片</label>
-                  <div class="upload-box" style="padding:16px;">
-                    <div style="font-size:20px;">+</div>
-                    <div style="font-size:12px;margin-top:4px;">最多 5 张</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">推广设置</label>
-                  <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#555;">
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" checked /> 首页展示</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" /> 加入限时秒杀</label>
-                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" /> 推荐给附近用户</label>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">自提站点</label>
-                  <select class="form-input" size="3" style="height:auto;">
-                    <option selected>幸福里小区站</option>
-                    <option>阳光里社区站</option>
-                    <option>绿苑里站</option>
+                  <label class="form-label">商品分类 <span class="req">*</span></label>
+                  <select id="f-category" class="form-input">
+                    <option value="1">蔬菜</option><option value="2">水果</option>
+                    <option value="3">肉禽</option><option value="4">海鲜</option>
+                    <option value="5">蛋奶</option><option value="6">粮油</option>
+                    <option value="7">豆制品</option><option value="8">日用品</option>
                   </select>
-                  <div class="form-hint">可多选，ctrl/cmd+点击</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">计量单位 <span class="req">*</span></label>
+                  <input id="f-unit" class="form-input" placeholder="例：斤 / 个 / 盒 / 500g" />
+                  <div class="form-hint">显示在价格后面，如 ¥5.5/斤</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">售价（元）<span class="req">*</span></label>
+                  <input id="f-price" class="form-input" type="number" placeholder="5.50" step="0.01" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">划线价（元）</label>
+                  <input id="f-original-price" class="form-input" type="number" placeholder="9.90" step="0.01" />
+                  <div class="form-hint">留空则不显示划线价</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">初始库存 <span class="req">*</span></label>
+                  <input id="f-stock" class="form-input" type="number" placeholder="500" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">库存预警值</label>
+                  <input id="f-stock-warn" class="form-input" type="number" placeholder="20" />
+                  <div class="form-hint">低于此值时显示预警</div>
+                </div>
+                <div class="form-group" style="grid-column:1/-1;">
+                  <label class="form-label">卖点标签</label>
+                  <input id="f-tags" class="form-input" placeholder="例：当日采摘, 有机认证, 产地直发（逗号分隔）" />
+                </div>
+                <div class="form-group" style="grid-column:1/-1;">
+                  <label class="form-label">商品详情描述</label>
+                  <textarea id="f-detail" class="form-input" rows="4" placeholder="产地来源、新鲜程度、储存方法、烹饪建议…"></textarea>
                 </div>
               </div>
             </div>
-            <div class="form-footer">
-              <button class="btn" onclick="goPage('goods')">取消</button>
-              <button class="btn" onclick="submitGoods(0)">保存草稿</button>
-              <button class="btn btn-primary" onclick="submitGoods(1)">立即上架</button>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">商品图片</label>
+                <div class="upload-box">
+                  <div style="font-size:28px;">📷</div>
+                  <div style="margin-top:6px;">点击上传图片</div>
+                  <div style="font-size:11px;margin-top:4px;">建议 800×800px</div>
+                </div>
+                <div class="form-hint" style="margin-top:4px;">暂用 Emoji 代替，后续可接 OSS</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">首页展示</label>
+                <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="f-is-hot" checked /> 加入今日特惠</label>
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="f-is-new" checked /> 加入新品上架</label>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- ========== GROUP ========== -->
-      <div class="page" id="page-group">
-        <div class="toolbar">
-          <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="搜索拼团活动…" /></div>
-          <select class="filter-sel"><option>全部状态</option><option>进行中</option><option>已成团</option><option>未成团</option></select>
-          <div style="margin-left:auto;"><button class="btn btn-sm btn-primary">+ 手动创建拼团</button></div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>商品</th><th>拼团价</th><th>需人数</th><th>参团进度</th><th>截止时间</th><th>发起人</th><th>站点</th><th>状态</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><div class="goods-cell"><div class="goods-thumb">🥦</div><div class="goods-name">有机西兰花 500g</div></div></td>
-                <td style="color:#E64A0E;font-weight:600;">¥8.9</td>
-                <td>3人</td>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-wrap"><div class="progress-fill" style="width:67%;"></div></div><span style="font-size:12px;color:#888;">2/3</span></div></td>
-                <td style="font-size:12px;color:#E64A0E;">02:47:31</td>
-                <td style="font-size:12px;">王**</td>
-                <td style="font-size:12px;color:#888;">幸福里站</td>
-                <td><span class="badge badge-warn">进行中</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">详情</button><button class="act-btn act-del">终止</button></div></td>
-              </tr>
-              <tr>
-                <td><div class="goods-cell"><div class="goods-thumb">🍊</div><div class="goods-name">赣南脐橙 5斤装</div></div></td>
-                <td style="color:#E64A0E;font-weight:600;">¥23.9</td>
-                <td>2人</td>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-wrap"><div class="progress-fill" style="width:50%;"></div></div><span style="font-size:12px;color:#888;">1/2</span></div></td>
-                <td style="font-size:12px;color:#E64A0E;">05:12:08</td>
-                <td style="font-size:12px;">李**</td>
-                <td style="font-size:12px;color:#888;">阳光里站</td>
-                <td><span class="badge badge-warn">进行中</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">详情</button><button class="act-btn act-del">终止</button></div></td>
-              </tr>
-              <tr>
-                <td><div class="goods-cell"><div class="goods-thumb">🥩</div><div class="goods-name">澳洲牛排 200g</div></div></td>
-                <td style="color:#E64A0E;font-weight:600;">¥39</td>
-                <td>5人</td>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-wrap"><div class="progress-fill" style="width:100%;background:#2E9B5E;"></div></div><span style="font-size:12px;color:#2E9B5E;font-weight:500;">5/5 ✓</span></div></td>
-                <td style="font-size:12px;color:#bbb;">已截止</td>
-                <td style="font-size:12px;">张**</td>
-                <td style="font-size:12px;color:#888;">幸福里站</td>
-                <td><span class="badge badge-success">已成团</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">详情</button></div></td>
-              </tr>
-              <tr>
-                <td><div class="goods-cell"><div class="goods-thumb">🫐</div><div class="goods-name">云南蓝莓 125g×4</div></div></td>
-                <td style="color:#E64A0E;font-weight:600;">¥29</td>
-                <td>2人</td>
-                <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-wrap"><div class="progress-fill" style="width:100%;background:#bbb;"></div></div><span style="font-size:12px;color:#bbb;">超时</span></div></td>
-                <td style="font-size:12px;color:#bbb;">已截止</td>
-                <td style="font-size:12px;">孙**</td>
-                <td style="font-size:12px;color:#888;">绿苑里站</td>
-                <td><span class="badge badge-gray">未成团</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">详情</button><button class="act-btn">退款</button></div></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="pager"><span class="pager-info">共 119 条拼团记录</span><div class="pager-btns"><button class="pager-btn">‹</button><button class="pager-btn active">1</button><button class="pager-btn">2</button><button class="pager-btn">3</button><button class="pager-btn">›</button></div></div>
-      </div>
-
-      <!-- ========== ORDERS ========== -->
-      <div class="page" id="page-orders">
-        <div class="order-tabs">
-          <div class="order-tab active">全部 (347)</div>
-          <div class="order-tab">待付款 (12)</div>
-          <div class="order-tab">拼团中 (23)</div>
-          <div class="order-tab">配送中 (58)</div>
-          <div class="order-tab">已完成</div>
-          <div style="margin-left:auto;display:flex;gap:8px;">
-            <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="订单号/手机号…" /></div>
-            <button class="btn btn-sm">导出 Excel</button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>订单号</th><th>用户</th><th>商品摘要</th><th>实付金额</th><th>下单时间</th><th>站点</th><th>状态</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr>
-                <td style="font-size:12px;font-weight:600;">#O-240128-001</td>
-                <td style="font-size:12px;">王**(138****0001)</td>
-                <td style="font-size:12px;color:#666;">西兰花×2, 脐橙×1</td>
-                <td style="color:#E64A0E;font-weight:600;">¥41.7</td>
-                <td style="font-size:12px;color:#bbb;">01-28 14:23</td>
-                <td style="font-size:12px;">幸福里站</td>
-                <td><span class="badge badge-warn">待付款</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">查看</button><button class="act-btn act-warn">催付款</button></div></td>
-              </tr>
-              <tr>
-                <td style="font-size:12px;font-weight:600;">#O-240128-002</td>
-                <td style="font-size:12px;">李**(139****0022)</td>
-                <td style="font-size:12px;color:#666;">澳洲牛排 ×1</td>
-                <td style="color:#E64A0E;font-weight:600;">¥39.0</td>
-                <td style="font-size:12px;color:#bbb;">01-28 13:05</td>
-                <td style="font-size:12px;">阳光里站</td>
-                <td><span class="badge badge-info">拼团中</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">查看</button></div></td>
-              </tr>
-              <tr>
-                <td style="font-size:12px;font-weight:600;">#O-240127-089</td>
-                <td style="font-size:12px;">张**(136****0089)</td>
-                <td style="font-size:12px;color:#666;">云南蓝莓 125g×4</td>
-                <td style="color:#E64A0E;font-weight:600;">¥29.0</td>
-                <td style="font-size:12px;color:#bbb;">01-27 18:44</td>
-                <td style="font-size:12px;">幸福里站</td>
-                <td><span class="badge badge-success">配送中</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">查看</button><button class="act-btn">物流</button></div></td>
-              </tr>
-              <tr>
-                <td style="font-size:12px;font-weight:600;">#O-240127-077</td>
-                <td style="font-size:12px;">赵**(137****0077)</td>
-                <td style="font-size:12px;color:#666;">有机小白菜 ×3袋</td>
-                <td style="color:#E64A0E;font-weight:600;">¥35.7</td>
-                <td style="font-size:12px;color:#bbb;">01-27 10:12</td>
-                <td style="font-size:12px;">绿苑里站</td>
-                <td><span class="badge badge-gray">已完成</span></td>
-                <td><div class="action-btns"><button class="act-btn act-edit">查看</button></div></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="pager"><span class="pager-info">共 347 笔订单 · 总额 ¥12,480</span><div class="pager-btns"><button class="pager-btn">‹</button><button class="pager-btn active">1</button><button class="pager-btn">2</button><button class="pager-btn">…</button><button class="pager-btn">35</button><button class="pager-btn">›</button></div></div>
-      </div>
-
-      <!-- ========== FLASH ========== -->
-      <div class="page" id="page-flash">
-        <div class="panel">
-          <div class="panel-header"><span class="panel-title">限时秒杀配置</span><button class="btn btn-sm btn-primary">+ 新增秒杀场次</button></div>
-          <div class="panel-body">
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead><tr><th>场次名称</th><th>开始时间</th><th>结束时间</th><th>商品数</th><th>状态</th><th>操作</th></tr></thead>
-                <tbody>
-                  <tr><td style="font-weight:500;">🔥 今日午间秒杀</td><td>12:00</td><td>14:00</td><td>6件</td><td><span class="badge badge-success">进行中</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-del">停止</button></div></td></tr>
-                  <tr><td style="font-weight:500;">⚡ 晚间特惠</td><td>19:00</td><td>21:00</td><td>4件</td><td><span class="badge badge-info">未开始</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-del">删除</button></div></td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="form-footer">
+            <button class="btn" onclick="goPage('goods')">取消</button>
+            <button class="btn" onclick="submitGoods(0)">保存草稿</button>
+            <button class="btn btn-primary" onclick="submitGoods(1)">立即上架</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- ========== STATION ========== -->
-      <div class="page" id="page-station">
-        <div class="toolbar">
-          <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="搜索站点名称…" /></div>
-          <div style="margin-left:auto;"><button class="btn btn-sm btn-primary">+ 新增站点</button></div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>站点名称</th><th>地址</th><th>站长</th><th>联系方式</th><th>覆盖用户</th><th>今日订单</th><th>状态</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:500;">幸福里小区站</td><td style="font-size:12px;color:#888;">朝阳区幸福里小区1号楼门口</td><td>王站长</td><td style="font-size:12px;">138****0001</td><td>320户</td><td>89单</td><td><span class="badge badge-success">运营中</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button></div></td></tr>
-              <tr><td style="font-weight:500;">阳光里社区站</td><td style="font-size:12px;color:#888;">朝阳区阳光里2区物业门口</td><td>李站长</td><td style="font-size:12px;">139****0022</td><td>180户</td><td>45单</td><td><span class="badge badge-success">运营中</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button></div></td></tr>
-              <tr><td style="font-weight:500;">绿苑里站</td><td style="font-size:12px;color:#888;">朝阳区绿苑里3号楼大厅</td><td>赵站长</td><td style="font-size:12px;">137****0077</td><td>95户</td><td>12单</td><td><span class="badge badge-warn">筹备中</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on">激活</button></div></td></tr>
-            </tbody>
-          </table>
+    <!-- ========== ORDERS ========== -->
+    <div class="page" id="page-orders">
+      <div class="order-tabs" id="order-tabs">
+        <div class="order-tab active" data-status="">全部</div>
+        <div class="order-tab" data-status="0">待付款</div>
+        <div class="order-tab" data-status="1">待发货</div>
+        <div class="order-tab" data-status="2">配送中</div>
+        <div class="order-tab" data-status="3">待自提</div>
+        <div class="order-tab" data-status="4">已完成</div>
+        <div class="order-tab" data-status="5">已取消</div>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <div class="search-wrap"><span class="search-icon">🔍</span><input id="order-search" placeholder="订单号/手机号…" oninput="loadOrders()" /></div>
+          <button class="btn btn-sm" onclick="exportOrders()">导出 CSV</button>
         </div>
       </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>订单号</th><th>用户地址</th><th>商品摘要</th>
+              <th>实付金额</th><th>配送方式</th><th>下单时间</th><th>状态</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span id="orders-count" class="pager-info">加载中…</span>
+        <div class="pager-btns" id="orders-pager"></div>
+      </div>
+    </div>
 
-      <!-- ========== USERS ========== -->
-      <div class="page" id="page-users">
-        <div class="toolbar">
-          <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="搜索用户昵称、手机号…" /></div>
-          <select class="filter-sel"><option>全部站点</option><option>幸福里站</option><option>阳光里站</option><option>绿苑里站</option></select>
-          <div style="margin-left:auto;"><button class="btn btn-sm">导出用户</button></div>
+    <!-- ========== DELIVERY ========== -->
+    <div class="page" id="page-delivery">
+      <div class="toolbar">
+        <div class="order-tabs" style="margin-bottom:0;">
+          <div class="order-tab active" onclick="loadDelivery('delivery',this)">🚚 送上门</div>
+          <div class="order-tab" onclick="loadDelivery('pickup',this)">🏪 到店自提</div>
         </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>用户</th><th>手机号</th><th>所属站点</th><th>注册时间</th><th>累计订单</th><th>累计消费</th><th>邀请人数</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:32px;background:#FFF3EE;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#E64A0E;font-size:12px;font-weight:600;">王</div><span style="font-size:13px;font-weight:500;">王小花</span></div></td><td style="font-size:12px;">138****0001</td><td style="font-size:12px;">幸福里站</td><td style="font-size:12px;color:#bbb;">2023-10-12</td><td>12单</td><td style="color:#E64A0E;font-weight:500;">¥380</td><td>3人</td><td><div class="action-btns"><button class="act-btn act-edit">详情</button><button class="act-btn">发优惠券</button></div></td></tr>
-              <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:32px;background:#E8F1FD;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#185FA5;font-size:12px;font-weight:600;">李</div><span style="font-size:13px;font-weight:500;">李大明</span></div></td><td style="font-size:12px;">139****0022</td><td style="font-size:12px;">阳光里站</td><td style="font-size:12px;color:#bbb;">2023-11-05</td><td>8单</td><td style="color:#E64A0E;font-weight:500;">¥228</td><td>1人</td><td><div class="action-btns"><button class="act-btn act-edit">详情</button><button class="act-btn">发优惠券</button></div></td></tr>
-            </tbody>
-          </table>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn btn-sm btn-primary" onclick="markAllShipping()">批量发货</button>
         </div>
       </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:36px;"><input type="checkbox" id="delivery-all-cb" onchange="toggleDeliveryAll(this)"/></th>
+              <th>订单号</th><th>收货人</th><th>地址</th>
+              <th>商品</th><th>金额</th><th>下单时间</th><th>状态</th><th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="delivery-tbody">
+            <tr><td colspan="9" style="text-align:center;padding:40px;color:#999;">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span id="delivery-count" class="pager-info">—</span>
+      </div>
+    </div>
 
-      <!-- ========== COUPON ========== -->
-      <div class="page" id="page-coupon">
-        <div class="toolbar">
-          <div style="margin-left:auto;"><button class="btn btn-sm btn-primary">+ 新建优惠券</button></div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>券名</th><th>类型</th><th>面值/折扣</th><th>使用门槛</th><th>有效期</th><th>已发/总量</th><th>状态</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr><td style="font-weight:500;">🎁 新人专享券</td><td style="font-size:12px;">满减券</td><td style="color:#E64A0E;font-weight:600;">减¥5</td><td style="font-size:12px;">满¥30使用</td><td style="font-size:12px;color:#bbb;">2024-03-31</td><td style="font-size:12px;">1,200/2,000</td><td><span class="badge badge-success">发放中</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-del">停止</button></div></td></tr>
-              <tr><td style="font-weight:500;">⚡ 拼团专属折扣</td><td style="font-size:12px;">折扣券</td><td style="color:#E64A0E;font-weight:600;">9折</td><td style="font-size:12px;">无门槛</td><td style="font-size:12px;color:#bbb;">2024-02-14</td><td style="font-size:12px;">88/500</td><td><span class="badge badge-warn">即将到期</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button></div></td></tr>
-            </tbody>
-          </table>
+    <!-- ========== USERS ========== -->
+    <div class="page" id="page-users">
+      <div class="toolbar">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input id="users-search" placeholder="搜索昵称、手机号…" oninput="loadUsers()" /></div>
+        <div style="margin-left:auto;"><button class="btn btn-sm" onclick="exportUsers()">导出用户</button></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>用户</th><th>手机号</th><th>注册时间</th><th>累计订单</th><th>累计消费</th><th>积分</th><th>操作</th></tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== COUPON ========== -->
+    <div class="page" id="page-coupon">
+      <div class="toolbar">
+        <div style="margin-left:auto;">
+          <button class="btn btn-sm btn-primary" onclick="openCouponForm()">+ 新建优惠券</button>
         </div>
       </div>
-
-      <!-- ========== BANNER ========== -->
-      <div class="page" id="page-banner">
-        <div class="toolbar"><div style="margin-left:auto;"><button class="btn btn-sm btn-primary">+ 添加 Banner</button></div></div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>预览</th><th>标题</th><th>跳转目标</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr><td><div style="width:80px;height:40px;background:#FFF3EE;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🥦</div></td><td style="font-weight:500;">新鲜有机蔬菜 · 限时5折</td><td style="font-size:12px;color:#888;">商品详情 ID:101</td><td><input type="number" value="1" style="width:50px;border:1px solid #DDD;border-radius:4px;padding:3px 6px;font-size:12px;" /></td><td><span class="badge badge-success">展示中</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-del">删除</button></div></td></tr>
-              <tr><td><div style="width:80px;height:40px;background:#FFF0F5;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🥩</div></td><td style="font-weight:500;">澳洲牛排节 大促来袭</td><td style="font-size:12px;color:#888;">商品分类 ID:2</td><td><input type="number" value="2" style="width:50px;border:1px solid #DDD;border-radius:4px;padding:3px 6px;font-size:12px;" /></td><td><span class="badge badge-gray">已停用</span></td><td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on">启用</button></div></td></tr>
-            </tbody>
-          </table>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>券名</th><th>面值</th><th>使用门槛</th><th>有效期</th><th>已发/总量</th><th>状态</th><th>操作</th></tr>
+          </thead>
+          <tbody id="coupon-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">加载中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- 新建表单 -->
+      <div id="coupon-form" style="display:none;" class="panel" style="margin-top:14px;">
+        <div class="panel-header"><span class="panel-title">新建优惠券</span></div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">券名 <span class="req">*</span></label><input id="cf-name" class="form-input" placeholder="例：新人专享券"/></div>
+            <div class="form-group"><label class="form-label">面值（元）<span class="req">*</span></label><input id="cf-amount" class="form-input" type="number" placeholder="5"/></div>
+            <div class="form-group"><label class="form-label">使用门槛（满多少元）</label><input id="cf-min" class="form-input" type="number" placeholder="30"/></div>
+            <div class="form-group"><label class="form-label">发放总量</label><input id="cf-total" class="form-input" type="number" placeholder="1000"/></div>
+            <div class="form-group"><label class="form-label">有效期至</label><input id="cf-expire" class="form-input" type="date"/></div>
+            <div class="form-group"><label class="form-label">适用范围</label><input id="cf-scope" class="form-input" placeholder="全场通用"/></div>
+          </div>
+          <div class="form-footer">
+            <button class="btn" onclick="document.getElementById('coupon-form').style.display='none'">取消</button>
+            <button class="btn btn-primary" onclick="saveCoupon()">创建并发放</button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- ========== SETTINGS ========== -->
-      <div class="page" id="page-settings">
-        <div class="panel" style="max-width:600px;">
-          <div class="panel-header"><span class="panel-title">系统设置</span></div>
-          <div class="panel-body">
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <div class="form-group"><label class="form-label">商城名称</label><input class="form-input" value="团优优选" /></div>
-              <div class="form-group"><label class="form-label">客服电话</label><input class="form-input" value="400-888-0001" /></div>
-              <div class="form-group"><label class="form-label">配送费（元）</label><input class="form-input" type="number" value="3" /></div>
-              <div class="form-group"><label class="form-label">免配送费门槛（元）</label><input class="form-input" type="number" value="39" /></div>
-              <div class="form-group"><label class="form-label">拼团失败退款说明</label><textarea class="form-input" rows="3">拼团失败后，付款金额将在1-3个工作日内原路退回至您的微信账户。</textarea></div>
-              <div class="form-footer" style="margin-top:0;padding-top:12px;"><button class="btn btn-primary">保存设置</button></div>
-            </div>
+    <!-- ========== BANNER ========== -->
+    <div class="page" id="page-banner">
+      <div class="toolbar"><div style="margin-left:auto;"><button class="btn btn-sm btn-primary" onclick="alert('Banner 上传功能对接 OSS 后启用')">+ 添加 Banner</button></div></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>预览</th><th>标题</th><th>跳转目标</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div style="width:80px;height:40px;background:#FFF0F0;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🥦</div></td>
+              <td style="font-weight:500;">新鲜蔬菜每日直采</td>
+              <td style="font-size:12px;color:#888;">分类 · 蔬菜</td>
+              <td><input type="number" value="1" style="width:50px;border:1px solid #DDD;border-radius:4px;padding:3px 6px;font-size:12px;" /></td>
+              <td><span class="badge badge-success">展示中</span></td>
+              <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-del">删除</button></div></td>
+            </tr>
+            <tr>
+              <td><div style="width:80px;height:40px;background:#FFF0F0;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🥩</div></td>
+              <td style="font-weight:500;">精选肉类冷鲜直送</td>
+              <td style="font-size:12px;color:#888;">分类 · 肉禽</td>
+              <td><input type="number" value="2" style="width:50px;border:1px solid #DDD;border-radius:4px;padding:3px 6px;font-size:12px;" /></td>
+              <td><span class="badge badge-gray">已停用</span></td>
+              <td><div class="action-btns"><button class="act-btn act-edit">编辑</button><button class="act-btn act-on">启用</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== SETTINGS ========== -->
+    <div class="page" id="page-settings">
+      <div class="panel" style="max-width:580px;">
+        <div class="panel-header"><span class="panel-title">系统设置</span></div>
+        <div class="panel-body">
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="form-group"><label class="form-label">商城名称</label><input class="form-input" id="set-name" value="大姚优鲜" /></div>
+            <div class="form-group"><label class="form-label">客服电话</label><input class="form-input" id="set-phone" value="400-888-0001" /></div>
+            <div class="form-group"><label class="form-label">配送费（元）</label><input class="form-input" type="number" id="set-fee" value="3" /></div>
+            <div class="form-group"><label class="form-label">免配送费门槛（元）</label><input class="form-input" type="number" id="set-free-threshold" value="30" /></div>
+            <div class="form-group"><label class="form-label">配送范围说明</label><input class="form-input" id="set-range" value="大姚县城区（金碧镇）2小时内配送" /></div>
+            <div class="form-group"><label class="form-label">自提地址</label><input class="form-input" id="set-pickup-addr" value="大姚县城营业点（具体地址请填写）" /></div>
+            <div class="form-footer" style="margin-top:0;"><button class="btn btn-primary" onclick="saveSettings()">保存设置</button></div>
           </div>
         </div>
       </div>
 
-    </div><!-- /content-area -->
-  </div><!-- /main -->
+      <!-- Supabase 表结构提示 -->
+      <div class="panel" style="max-width:580px;">
+        <div class="panel-header"><span class="panel-title">数据库字段说明（goods 表）</span></div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead><tr><th>字段名</th><th>类型</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td><code>id</code></td><td>int8</td><td>主键自增</td></tr>
+              <tr><td><code>name</code></td><td>text</td><td>商品名称</td></tr>
+              <tr><td><code>price</code></td><td>numeric</td><td>售价（小程序显示此字段）</td></tr>
+              <tr><td><code>original_price</code></td><td>numeric</td><td>划线原价（可空）</td></tr>
+              <tr><td><code>unit</code></td><td>text</td><td>计量单位，如 斤/个/盒</td></tr>
+              <tr><td><code>category_id</code></td><td>int2</td><td>1蔬菜 2水果 3肉禽 4海鲜 5蛋奶 6粮油 7豆制品 8日用品</td></tr>
+              <tr><td><code>stock</code></td><td>int4</td><td>库存数量</td></tr>
+              <tr><td><code>stock_warn</code></td><td>int4</td><td>预警阈值</td></tr>
+              <tr><td><code>tags</code></td><td>text</td><td>卖点标签，逗号分隔</td></tr>
+              <tr><td><code>detail</code></td><td>text</td><td>商品详情描述</td></tr>
+              <tr><td><code>is_hot</code></td><td>bool</td><td>加入今日特惠</td></tr>
+              <tr><td><code>is_new</code></td><td>bool</td><td>加入新品上架</td></tr>
+              <tr><td><code>status</code></td><td>int2</td><td>0下架 1上架</td></tr>
+              <tr><td><code>sold_count</code></td><td>int4</td><td>累计销售数</td></tr>
+              <tr><td><code>created_at</code></td><td>timestamptz</td><td>创建时间</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;font-size:12px;color:#888;">
+            ⚠️ 旧表有 <code>group_price</code> / <code>group_size</code> 字段，新版统一用 <code>price</code>。
+            建议在 Supabase 执行：<br>
+            <code style="background:#F5F5F5;padding:4px 8px;border-radius:4px;display:block;margin-top:6px;">ALTER TABLE goods ADD COLUMN IF NOT EXISTS price numeric;<br>UPDATE goods SET price = group_price WHERE price IS NULL;<br>ALTER TABLE goods ADD COLUMN IF NOT EXISTS unit text DEFAULT '件';</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /main -->
 </div><!-- /layout -->
 
 <script>
-// Page routing
-// ===== Supabase 配置（原生fetch，无需SDK）=====
+// ===== Supabase 配置 =====
 const SUPABASE_URL = 'https://qzceawujgcaqdgpiijvb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_8Xiqk94BFoUBtj43LVuJBA_EHFlZ9LC';
-const SB_HEADERS = {
-  'apikey': SUPABASE_KEY,
-  'Authorization': 'Bearer ' + SUPABASE_KEY,
-  'Content-Type': 'application/json',
-  'Prefer': 'return=representation'
-};
+const SB = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation' };
 
-// 模拟 supabase-js 接口的轻量封装
-const sb = {
-  from: (table) => ({
-    _table: table,
-    _filters: [],
-    _sel: '*',
-    _ord: null,
-    _lim: null,
-    select(s) { this._sel = s; return this; },
-    eq(col, val) { this._filters.push(`${col}=eq.${val}`); return this; },
-    neq(col, val) { this._filters.push(`${col}=neq.${val}`); return this; },
-    gte(col, val) { this._filters.push(`${col}=gte.${val}`); return this; },
-    ilike(col, val) { this._filters.push(`${col}=ilike.${encodeURIComponent(val)}`); return this; },
-    order(col, opts) { this._ord = col + '.' + (opts?.ascending ? 'asc' : 'desc'); return this; },
-    limit(n) { this._lim = n; return this; },
-    range(from, to) { this._range = `${from}-${to}`; return this; },
-    async _run(method, body) {
-      let url = `${SUPABASE_URL}/rest/v1/${this._table}?select=${encodeURIComponent(this._sel)}`;
-      this._filters.forEach(f => url += '&' + f);
-      if (this._ord) url += '&order=' + this._ord;
-      if (this._lim) url += '&limit=' + this._lim;
-      const opts = { method: method||'GET', headers: {...SB_HEADERS} };
-      if (body) opts.body = JSON.stringify(body);
-      if (method === 'GET' || !method) opts.headers['Prefer'] = 'count=exact';
-      try {
-        const res = await fetch(url, opts);
-        const data = res.status === 204 ? null : await res.json();
-        const count = parseInt(res.headers.get('content-range')?.split('/')[1]) || null;
-        return { data: Array.isArray(data) ? data : data ? [data] : [], error: res.ok ? null : data, count };
-      } catch(e) { return { data: [], error: e, count: null }; }
-    },
-    then(resolve) { return this._run('GET').then(resolve); },
-    async insert(data) { 
-      const url = `${SUPABASE_URL}/rest/v1/${this._table}`;
-      const res = await fetch(url, { method:'POST', headers: SB_HEADERS, body: JSON.stringify(data) });
-      const d = res.status===201||res.status===200 ? await res.json().catch(()=>null) : null;
-      return { data: d, error: res.ok ? null : await res.json().catch(()=>({message:'Error'})) };
-    },
-    async update(data) {
-      if (this._filters.length === 0) { return { data: null, error: {message:'安全限制：更新必须指定条件'} }; }
-      let url = SUPABASE_URL + '/rest/v1/' + this._table + '?' + this._filters.join('&');
-      const res = await fetch(url, { method:'PATCH', headers: {...SB_HEADERS, 'Prefer':'return=minimal'}, body: JSON.stringify(data) });
-      return { data: null, error: res.ok ? null : {message:'Update failed: ' + res.status} };
-    },
-    async delete() {
-      if (this._filters.length === 0) { return { data: null, error: {message:'安全限制：删除必须指定条件'} }; }
-      let url = SUPABASE_URL + '/rest/v1/' + this._table + '?' + this._filters.join('&');
-      const res = await fetch(url, { method:'DELETE', headers: {...SB_HEADERS, 'Prefer':'return=minimal'} });
-      return { data: null, error: res.ok ? null : {message:'Delete failed: ' + res.status} };
-    },
-    single() { this._lim = 1; return this; },
-  }),
-  auth: { signInWithPassword: async({email,password}) => ({ data: {user:{id:'admin',email}}, error: null }) },
-  rpc: async() => ({data:null,error:null}),
-};
+async function sbGet(table, params = {}) {
+  let url = `${SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(params.select || '*')}`;
+  (params.filters || []).forEach(f => url += '&' + f);
+  if (params.order) url += '&order=' + params.order;
+  if (params.limit) url += '&limit=' + params.limit;
+  const res = await fetch(url, { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, Prefer: 'count=exact' } });
+  const data = await res.json().catch(() => []);
+  const count = parseInt(res.headers.get('content-range')?.split('/')[1]) || 0;
+  return { data: Array.isArray(data) ? data : [], count, ok: res.ok };
+}
 
-// ===== 页面路由 =====
-const pageTitles = {
-  dashboard:'数据看板', goods:'商品管理', addgoods:'上架商品',
-  group:'拼团活动', flash:'秒杀配置', banner:'Banner 管理',
-  orders:'订单管理', station:'自提站点', users:'用户管理',
-  coupon:'优惠券管理', settings:'系统设置'
-};
+async function sbPost(table, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: SB, body: JSON.stringify(body) });
+  return { ok: res.ok, data: await res.json().catch(() => null) };
+}
 
-const topbarActions = {
+async function sbPatch(table, filters, body) {
+  let url = `${SUPABASE_URL}/rest/v1/${table}?` + filters.join('&');
+  const res = await fetch(url, { method: 'PATCH', headers: { ...SB, Prefer: 'return=minimal' }, body: JSON.stringify(body) });
+  return { ok: res.ok };
+}
+
+async function sbDelete(table, filters) {
+  let url = `${SUPABASE_URL}/rest/v1/${table}?` + filters.join('&');
+  const res = await fetch(url, { method: 'DELETE', headers: { ...SB, Prefer: 'return=minimal' } });
+  return { ok: res.ok };
+}
+
+// ===== 路由 =====
+const PAGE_TITLES = {
+  dashboard: '数据看板', goods: '商品管理', addgoods: '上架商品',
+  orders: '订单管理', delivery: '配送管理', users: '用户管理',
+  coupon: '优惠券管理', banner: 'Banner 管理', settings: '系统设置',
+};
+const PAGE_ACTIONS = {
   goods: '<button class="btn btn-sm btn-primary" onclick="goPage(\'addgoods\')">+ 上架商品</button>',
-  group: '<button class="btn btn-sm btn-primary">+ 新建拼团</button>',
-  orders: '<button class="btn btn-sm">导出 Excel</button>',
-  users: '<button class="btn btn-sm">导出用户数据</button>',
+  orders: '<button class="btn btn-sm" onclick="exportOrders()">导出 CSV</button>',
 };
 
 function goPage(name) {
@@ -906,279 +703,398 @@ function goPage(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const pg = document.getElementById('page-' + name);
   if (pg) pg.classList.add('active');
-  const navItem = document.querySelector(`.nav-item[data-page="${name}"]`);
-  if (navItem) navItem.classList.add('active');
-  document.getElementById('topbar-title').textContent = pageTitles[name] || name;
-  document.getElementById('topbar-action-area').innerHTML = topbarActions[name] || '';
-  // 切换页面时加载对应数据
-  if (name === 'dashboard') loadStats();
+  const ni = document.querySelector(`.nav-item[data-page="${name}"]`);
+  if (ni) ni.classList.add('active');
+  document.getElementById('topbar-title').textContent = PAGE_TITLES[name] || name;
+  document.getElementById('topbar-action-area').innerHTML = PAGE_ACTIONS[name] || '';
+  if (name === 'dashboard') loadDashboard();
   if (name === 'goods')     loadGoods();
   if (name === 'orders')    loadOrders();
-  if (name === 'group')     loadGroups();
+  if (name === 'delivery')  loadDelivery('delivery');
   if (name === 'users')     loadUsers();
+  if (name === 'coupon')    loadCoupons();
 }
 
-// Nav click
-document.querySelectorAll('.nav-item[data-page]').forEach(item => {
-  item.addEventListener('click', () => goPage(item.dataset.page));
-});
+document.querySelectorAll('.nav-item[data-page]').forEach(el =>
+  el.addEventListener('click', () => goPage(el.dataset.page)));
 
-// Order tabs
-document.querySelectorAll('.order-tab').forEach(tab => {
+// Order tab clicks
+document.querySelectorAll('#order-tabs .order-tab').forEach(tab => {
   tab.addEventListener('click', function() {
-    this.closest('.order-tabs').querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#order-tabs .order-tab').forEach(t => t.classList.remove('active'));
     this.classList.add('active');
-    const idx = [...this.parentElement.children].indexOf(this);
-    const statusMap = [null, 0, 1, 2, 3];
-    loadOrders(statusMap[idx]);
+    currentOrderStatus = this.dataset.status;
+    loadOrders();
   });
 });
 
-// Date
-function updateDate() {
-  const now = new Date();
-  const opts = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' };
-  document.getElementById('topbar-date').textContent = now.toLocaleString('zh-CN', opts);
+// ===== 时钟 =====
+function tick() {
+  document.getElementById('topbar-date').textContent =
+    new Date().toLocaleString('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit', weekday:'short', hour:'2-digit', minute:'2-digit' });
 }
-updateDate();
-setInterval(updateDate, 30000);
+tick(); setInterval(tick, 30000);
 
-// ===== 数据看板 =====
-async function loadStats() {
+// ===== DASHBOARD =====
+async function loadDashboard() {
   const today = new Date().toISOString().split('T')[0];
-  const { data: orders } = await sb.from('orders').select('total_amount').gte('created_at', today).neq('status', 4);
-  const revenue = (orders||[]).reduce((s, o) => s + parseFloat(o.total_amount||0), 0).toFixed(2);
-  const { count: newUsers }     = await sb.from('users').select('*', { count:'exact', head:true }).gte('created_at', today);
-  const { count: groupSuccess } = await sb.from('group_sessions').select('*', { count:'exact', head:true }).gte('created_at', today).eq('status', 1);
-  const vals = document.querySelectorAll('.stat-value');
-  if (vals[0]) vals[0].textContent = '¥' + revenue;
-  if (vals[1]) vals[1].textContent = (orders||[]).length;
-  if (vals[2]) vals[2].textContent = groupSuccess || 0;
-  if (vals[3]) vals[3].textContent = newUsers || 0;
+
+  // 从 Supabase orders 表读取（如果存在）；否则用空数据展示
+  const { data: todayOrders } = await sbGet('orders', { filters: [`created_at=gte.${today}`], select: 'pay_total,status,delivery_type' });
+
+  const revenue = todayOrders.reduce((s, o) => s + parseFloat(o.pay_total || 0), 0);
+  const shipping = todayOrders.filter(o => o.delivery_type === 'delivery' && (o.status === 1 || o.status === 2)).length;
+  const pickup   = todayOrders.filter(o => o.delivery_type === 'pickup'   && o.status === 3).length;
+  const pending  = todayOrders.filter(o => o.status === 0).length;
+
+  document.getElementById('stat-revenue').textContent = '¥' + revenue.toFixed(0);
+  document.getElementById('stat-orders').textContent  = todayOrders.length;
+  document.getElementById('stat-shipping').textContent = shipping;
+  document.getElementById('stat-pickup').textContent   = pickup;
+  document.getElementById('notif-count').textContent  = pending;
+  document.getElementById('badge-pending').textContent = pending > 0 ? pending : '';
+  document.getElementById('badge-pending').style.display = pending > 0 ? '' : 'none';
+
+  // 近7日图表（静态演示，真实环境可聚合 orders 表）
+  const days = ['一','二','三','四','五','六','今日'];
+  const vals = [42, 68, 55, 80, 60, 75, Math.min(90, revenue / 100 + 20)];
+  const maxV = Math.max(...vals);
+  document.getElementById('chart-max').textContent = '¥' + (maxV * 150).toFixed(0);
+  document.getElementById('chart-mid').textContent = '¥' + (maxV * 75).toFixed(0);
+  document.getElementById('weekly-chart').innerHTML = days.map((d, i) =>
+    `<div class="bar-col ${i===6?'today':''}">
+      <div class="bar-rect" style="height:${Math.round(vals[i]/maxV*90)}px;"></div>
+      <div class="bar-lbl">周${d}</div>
+    </div>`).join('');
+
+  // 库存预警
+  const { data: warnGoods } = await sbGet('goods', { filters: ['status=eq.1'], select: 'name,stock,stock_warn', order: 'stock.asc', limit: 6 });
+  const warns = warnGoods.filter(g => g.stock <= (g.stock_warn || 20));
+  document.getElementById('stock-warn-list').innerHTML = warns.length
+    ? warns.map(g => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F5F5F5;font-size:12px;">
+        <span style="color:#555;">${g.name}</span>
+        <span style="color:${g.stock===0?'#C62828':'#C17A00'};font-weight:500;">${g.stock===0?'售罄':'库存 '+g.stock+' 件'}</span>
+      </div>`).join('')
+    : '<div style="color:#bbb;font-size:13px;">暂无预警商品 ✓</div>';
 
   // 最新订单
-  const { data: latestOrders } = await sb.from('orders').select('order_no, goods_name, qty, total_amount, status').order('created_at', { ascending: false }).limit(4);
-  const statusBadge = { 0:'<span class="badge badge-warn">待付款</span>', 1:'<span class="badge badge-info">拼团中</span>', 2:'<span class="badge badge-success">配送中</span>', 3:'<span class="badge badge-gray">已完成</span>', 4:'<span class="badge badge-gray">已取消</span>' };
-  const miniList = document.querySelector('.mini-order');
-  if (miniList && latestOrders) {
-    miniList.innerHTML = latestOrders.map(o => `
-      <div class="mini-order-item">
-        <span class="mo-id">#${o.order_no?.slice(-8)||'-'}</span>
-        <span class="mo-name">${o.goods_name} ×${o.qty}</span>
-        <span class="mo-price">¥${o.total_amount}</span>
-        ${statusBadge[o.status]||''}
-      </div>`).join('');
-  }
+  const { data: latestOrders } = await sbGet('orders', { order: 'created_at.desc', limit: 5, select: 'id,items,pay_total,status,created_at' });
+  const statusBadge = { 0:'<span class="badge badge-warn">待付款</span>', 1:'<span class="badge badge-info">待发货</span>', 2:'<span class="badge badge-success">配送中</span>', 3:'<span class="badge badge-purple">待自提</span>', 4:'<span class="badge badge-gray">已完成</span>', 5:'<span class="badge badge-gray">已取消</span>' };
+  document.getElementById('latest-orders').innerHTML = latestOrders.length
+    ? latestOrders.map(o => {
+        const items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []);
+        const summary = items.map(i => i.name + ' ×' + i.qty).join(', ').slice(0, 30);
+        return `<div class="mini-order-item">
+          <span class="mo-id">#${String(o.id).slice(-8)}</span>
+          <span class="mo-name">${summary || '—'}</span>
+          <span class="mo-price">¥${o.pay_total}</span>
+          ${statusBadge[o.status] || '—'}
+        </div>`;
+      }).join('')
+    : '<div style="color:#bbb;padding:16px 0;font-size:13px;">暂无订单数据</div>';
 }
 
-// ===== 商品管理 =====
+// ===== GOODS =====
+const CAT_NAMES = ['','蔬菜','水果','肉禽','海鲜','蛋奶','粮油','豆制品','日用品'];
+
 async function loadGoods() {
-  const keyword = document.querySelector('#goods-search')?.value?.trim() || '';
-  const categoryId = document.querySelector('#goods-category')?.value || '';
-  const statusVal = document.querySelector('#goods-status')?.value || '';
-  
-  let query = sb.from('goods').select('*').order('created_at', { ascending: false });
-  if (keyword) query = query.ilike('name', '%' + keyword + '%');
-  if (categoryId) query = query.eq('category_id', categoryId);
-  if (statusVal !== '') query = query.eq('status', Number(statusVal));
-  
-  const { data, error } = await query;
-  if (error) { console.error(error); return; }
-  const tbody = document.querySelector('#page-goods .data-table tbody');
-  if (!tbody) return;
-  if (!data || data.length === 0) {
+  const kw  = document.getElementById('goods-search')?.value?.trim() || '';
+  const cat = document.getElementById('goods-category')?.value || '';
+  const st  = document.getElementById('goods-status')?.value || '';
+  const filters = [];
+  if (cat) filters.push('category_id=eq.' + cat);
+  if (st !== '') filters.push('status=eq.' + st);
+  if (kw) filters.push('name=ilike.*' + encodeURIComponent(kw) + '*');
+  const { data, count } = await sbGet('goods', { filters, select: '*', order: 'created_at.desc', limit: 50 });
+  const tbody = document.getElementById('goods-tbody');
+  if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:#999;">暂无商品</td></tr>';
-    document.querySelector('#goods-count').textContent = '共 0 件商品';
+    document.getElementById('goods-count').textContent = '共 0 件商品';
     return;
   }
-  const catNames = ['','蔬菜水果','肉禽蛋品','海鲜水产','粮油调味','乳制品','日用百货'];
   tbody.innerHTML = data.map(g => {
-    const statusBadge = g.status==1
-      ? '<span class="badge badge-success">上架中</span>'
-      : g.stock==0
-        ? '<span class="badge badge-danger">售罄</span>'
-        : '<span class="badge badge-gray">已下架</span>';
-    const toggleBtn = g.status==1
-      ? `<button class="act-btn act-del" onclick="toggleGoods(${g.id},0)">下架</button>`
-      : `<button class="act-btn act-on" onclick="toggleGoods(${g.id},1)">上架</button>`;
-    const safeName = g.name.replace(/'/g,'').replace(/"/g,'');
+    const price = g.price || g.group_price || '—';
+    const badge = g.status == 1
+      ? (g.stock == 0 ? '<span class="badge badge-danger">售罄</span>' : '<span class="badge badge-success">上架中</span>')
+      : '<span class="badge badge-gray">已下架</span>';
+    const toggleBtn = g.status == 1
+      ? `<button class="act-btn act-del" onclick="setGoodsStatus(${g.id},0)">下架</button>`
+      : `<button class="act-btn act-on" onclick="setGoodsStatus(${g.id},1)">上架</button>`;
     return `<tr>
       <td><input type="checkbox"/></td>
-      <td><div class="goods-cell"><div class="goods-thumb" style="font-size:22px;">🛒</div><div><div class="goods-name">${g.name}</div><div class="goods-sku">ID:${g.id} · ${g.spec||''}</div></div></div></td>
-      <td style="color:#888;">${catNames[g.category_id]||'-'}</td>
-      <td style="color:#E64A0E;font-weight:600;">¥${g.group_price}</td>
-      <td style="color:#bbb;text-decoration:line-through;">¥${g.original_price}</td>
-      <td style="${g.stock<=(g.stock_warn||20)?'color:#D94141;font-weight:500;':''}">${g.stock}</td>
-      <td>${g.sold_count||0}</td>
-      <td>${statusBadge}</td>
-      <td style="color:#bbb;font-size:12px;">${new Date(g.created_at).toLocaleDateString()}</td>
+      <td><div class="goods-cell"><div class="goods-thumb">🛒</div><div>
+        <div class="goods-name">${g.name}</div>
+        <div class="goods-sku">ID:${g.id} · ${g.tags||''}</div>
+      </div></div></td>
+      <td style="color:#888;">${CAT_NAMES[g.category_id] || '—'}</td>
+      <td style="color:#E02020;font-weight:600;">¥${price}</td>
+      <td style="color:#bbb;text-decoration:line-through;">${g.original_price ? '¥'+g.original_price : '—'}</td>
+      <td>${g.unit || '件'}</td>
+      <td style="${g.stock <= (g.stock_warn||20) ? 'color:#C62828;font-weight:500;' : ''}">${g.stock ?? '—'}</td>
+      <td>${g.sold_count || 0}</td>
+      <td>${badge}</td>
       <td><div class="action-btns">
         <button class="act-btn act-edit" onclick="editGoods(${g.id})">编辑</button>
-        <button class="act-btn act-on" style="border-color:#0F6E56;color:#0F6E56;" onclick="startGroup(${g.id},'${safeName}')">拼团</button>
         ${toggleBtn}
-        <button class="act-btn act-del" onclick="deleteGoods(${g.id},'${safeName}')">删除</button>
+        <button class="act-btn act-del" onclick="deleteGoods(${g.id},'${g.name.replace(/'/g,'')}')">删除</button>
       </div></td>
     </tr>`;
   }).join('');
-  document.querySelector('#goods-count').textContent = '共 ' + data.length + ' 件商品';
+  document.getElementById('goods-count').textContent = `共 ${count || data.length} 件商品`;
 }
 
-async function toggleGoods(id, newStatus) {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/goods?id=eq.' + id, {
-    method: 'PATCH',
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-    body: JSON.stringify({ status: newStatus })
-  });
-  if (res.ok) loadGoods();
-  else alert('操作失败: ' + res.status);
+async function setGoodsStatus(id, status) {
+  const { ok } = await sbPatch('goods', ['id=eq.' + id], { status });
+  if (ok) loadGoods(); else alert('操作失败');
 }
 
 async function deleteGoods(id, name) {
-  if (!confirm('确认永久删除「' + name + '」？\n此操作不可恢复！')) return;
-  const res = await fetch(SUPABASE_URL + '/rest/v1/goods?id=eq.' + id, {
-    method: 'DELETE',
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Prefer': 'return=minimal' }
-  });
-  if (res.ok) { alert('已删除'); loadGoods(); }
-  else { alert('删除失败: ' + res.status); }
+  if (!confirm(`确认永久删除「${name}」？此操作不可恢复！`)) return;
+  const { ok } = await sbDelete('goods', ['id=eq.' + id]);
+  if (ok) { loadGoods(); } else alert('删除失败');
 }
 
 function editGoods(id) {
-  alert('编辑商品 ID: ' + id + '\n（完整编辑功能开发中）');
+  // 简单提示；完整编辑可扩展为填充表单后跳到 addgoods 页
+  alert('编辑商品 ID: ' + id + '\n功能：将在后续版本中弹出编辑弹窗');
 }
 
-function startGroup(goodsId, goodsName) {
-  if (!confirm('为商品「' + goodsName + '」创建拼团活动？')) return;
-  alert('拼团功能需要用户在小程序端发起，后台可在「拼团活动」页面查看和管理。');
-}
-
-// ===== 上架商品 =====
 async function submitGoods(status) {
-  const name         = document.getElementById('f-name')?.value?.trim();
-  const categoryId   = document.getElementById('f-category')?.value;
-  const spec         = document.getElementById('f-spec')?.value?.trim();
-  const originalPrice= document.getElementById('f-original-price')?.value;
-  const groupPrice   = document.getElementById('f-group-price')?.value;
-  const stock        = document.getElementById('f-stock')?.value;
-  const stockWarn    = document.getElementById('f-stock-warn')?.value || 20;
-  const groupSize    = document.getElementById('f-group-size')?.value || 3;
-  const groupHours   = document.getElementById('f-group-hours')?.value || 24;
-  const tags         = document.getElementById('f-tags')?.value?.trim();
-  const detail       = document.getElementById('f-detail')?.value?.trim();
+  const name  = document.getElementById('f-name')?.value?.trim();
+  const catId = document.getElementById('f-category')?.value;
+  const unit  = document.getElementById('f-unit')?.value?.trim();
+  const price = document.getElementById('f-price')?.value;
+  const oriP  = document.getElementById('f-original-price')?.value;
+  const stock = document.getElementById('f-stock')?.value;
+  const warn  = document.getElementById('f-stock-warn')?.value || 20;
+  const tags  = document.getElementById('f-tags')?.value?.trim();
+  const detail= document.getElementById('f-detail')?.value?.trim();
+  const isHot = document.getElementById('f-is-hot')?.checked;
+  const isNew = document.getElementById('f-is-new')?.checked;
 
-  if (!name)          { alert('请填写商品名称'); return; }
-  if (!originalPrice) { alert('请填写原价'); return; }
-  if (!groupPrice)    { alert('请填写拼团价'); return; }
-  if (!stock)         { alert('请填写库存'); return; }
-  if (parseFloat(groupPrice) >= parseFloat(originalPrice)) { alert('拼团价必须低于原价'); return; }
+  if (!name)  { alert('请填写商品名称'); return; }
+  if (!price) { alert('请填写售价'); return; }
+  if (!stock) { alert('请填写库存'); return; }
+  if (!unit)  { alert('请填写计量单位'); return; }
 
-  const { error } = await sb.from('goods').insert({
-    name, category_id: Number(categoryId),
-    spec, original_price: originalPrice,
-    group_price: groupPrice, stock: Number(stock),
-    stock_warn: Number(stockWarn), group_size: Number(groupSize),
-    group_hours: Number(groupHours), tags, detail,
-    is_recommend: 1, status
-  });
-
-  if (error) { alert('上架失败: ' + error.message); return; }
+  const payload = {
+    name, category_id: Number(catId), unit,
+    price: Number(price),
+    original_price: oriP ? Number(oriP) : null,
+    stock: Number(stock), stock_warn: Number(warn),
+    tags, detail,
+    is_hot: isHot, is_new: isNew,
+    // 兼容旧字段：同时写入 group_price
+    group_price: Number(price),
+    status,
+  };
+  const { ok, data } = await sbPost('goods', payload);
+  if (!ok) { alert('上架失败，请检查表字段'); return; }
   alert(status === 1 ? '✅ 商品上架成功！' : '✅ 已保存为草稿');
-  // 清空表单
-  ['f-name','f-spec','f-original-price','f-group-price','f-stock','f-stock-warn','f-tags','f-detail'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
+  ['f-name','f-unit','f-price','f-original-price','f-stock','f-stock-warn','f-tags','f-detail'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
   });
   goPage('goods');
 }
 
-// ===== 订单管理 =====
-async function loadOrders(status=null) {
-  let query = sb.from('orders').select('order_no, goods_name, qty, total_amount, status, created_at, users(nickname, phone)').order('created_at', { ascending: false }).limit(50);
-  if (status !== null) query = query.eq('status', status);
-  const { data } = await query;
-  const tbody = document.querySelector('#page-orders .data-table tbody');
-  if (!tbody) return;
-  const statusBadge = { 0:'<span class="badge badge-warn">待付款</span>', 1:'<span class="badge badge-info">拼团中</span>', 2:'<span class="badge badge-success">配送中</span>', 3:'<span class="badge badge-gray">已完成</span>', 4:'<span class="badge badge-gray">已取消</span>' };
-  if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">暂无订单</td></tr>';
-    return;
-  }
-  tbody.innerHTML = data.map(o => `
-    <tr>
-      <td style="font-size:12px;font-weight:600;">#${o.order_no||'-'}</td>
-      <td style="font-size:12px;">${o.users?.nickname||'用户'}(${o.users?.phone||'-'})</td>
-      <td style="font-size:12px;color:#666;">${o.goods_name} ×${o.qty}</td>
-      <td style="color:#E64A0E;font-weight:600;">¥${o.total_amount}</td>
-      <td style="font-size:12px;color:#bbb;">${new Date(o.created_at).toLocaleString()}</td>
-      <td style="font-size:12px;">-</td>
-      <td>${statusBadge[o.status]||'-'}</td>
-      <td><div class="action-btns"><button class="act-btn act-edit">查看</button></div></td>
-    </tr>`).join('');
-}
+// ===== ORDERS =====
+let currentOrderStatus = '';
 
-// ===== 拼团管理 =====
-async function loadGroups() {
-  const { data } = await sb.from('group_sessions').select('*, goods(name, group_price), users(nickname)').order('created_at', { ascending: false }).limit(30);
-  const tbody = document.querySelector('#page-group .data-table tbody');
-  if (!tbody) return;
-  const statusBadge = { 0:'<span class="badge badge-warn">进行中</span>', 1:'<span class="badge badge-success">已成团</span>', 2:'<span class="badge badge-gray">未成团</span>' };
-  if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:#999;">暂无拼团记录</td></tr>';
+async function loadOrders() {
+  const kw = document.getElementById('order-search')?.value?.trim() || '';
+  const filters = [];
+  if (currentOrderStatus !== '') filters.push('status=eq.' + currentOrderStatus);
+  const { data, count } = await sbGet('orders', { filters, select: '*', order: 'created_at.desc', limit: 50 });
+  const tbody = document.getElementById('orders-tbody');
+  const statusBadge = {
+    0: '<span class="badge badge-warn">待付款</span>',
+    1: '<span class="badge badge-info">待发货</span>',
+    2: '<span class="badge badge-success">配送中</span>',
+    3: '<span class="badge badge-purple">待自提</span>',
+    4: '<span class="badge badge-gray">已完成</span>',
+    5: '<span class="badge badge-danger">已取消</span>',
+  };
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">暂无订单</td></tr>';
+    document.getElementById('orders-count').textContent = '共 0 笔订单';
     return;
   }
-  tbody.innerHTML = data.map(g => {
-    const pct = Math.round((g.join_count / g.group_size) * 100);
-    const expire = new Date(g.expire_at);
-    const now = new Date();
-    const diffMs = expire - now;
-    const timeStr = diffMs > 0 ? `${Math.floor(diffMs/3600000)}h${Math.floor((diffMs%3600000)/60000)}m` : '已截止';
+  tbody.innerHTML = data.map(o => {
+    const items = typeof o.items === 'string' ? JSON.parse(o.items || '[]') : (o.items || []);
+    const summary = items.map(i => i.name + '×' + i.qty).join(', ').slice(0, 28) || '—';
+    const addr = o.address ? (typeof o.address === 'string' ? JSON.parse(o.address) : o.address) : null;
+    const addrStr = addr ? addr.name + ' ' + addr.tel + ' / ' + (addr.region||'') + (addr.detail||'') : '自提';
+    const deliveryIcon = o.delivery_type === 'delivery' ? '🚚' : '🏪';
+    const deliveryLabel = o.delivery_type === 'delivery' ? '送上门' : '到店自提';
     return `<tr>
-      <td><div class="goods-cell"><div class="goods-thumb" style="font-size:18px;">🛒</div><div class="goods-name">${g.goods?.name||'-'}</div></div></td>
-      <td style="color:#E64A0E;font-weight:600;">¥${g.goods?.group_price||'-'}</td>
-      <td>${g.group_size}人</td>
-      <td><div style="display:flex;align-items:center;gap:8px;"><div class="progress-wrap"><div class="progress-fill" style="width:${pct}%;${g.status==1?'background:#2E9B5E;':''}"></div></div><span style="font-size:12px;color:#888;">${g.join_count}/${g.group_size}</span></div></td>
-      <td style="font-size:12px;color:${diffMs>0?'#E64A0E':'#bbb'};">${timeStr}</td>
-      <td style="font-size:12px;">${g.users?.nickname||'-'}</td>
-      <td style="font-size:12px;color:#888;">-</td>
-      <td>${statusBadge[g.status]||'-'}</td>
-      <td><div class="action-btns"><button class="act-btn act-edit">详情</button>${g.status==0?`<button class="act-btn act-del" onclick="stopGroup(${g.id})">终止</button>`:''}</div></td>
+      <td style="font-size:12px;font-weight:600;">#${String(o.id).slice(-10)}</td>
+      <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${addrStr}</td>
+      <td style="font-size:12px;color:#666;">${summary}</td>
+      <td style="color:#E02020;font-weight:600;">¥${o.pay_total}</td>
+      <td style="font-size:12px;">${deliveryIcon} ${deliveryLabel}</td>
+      <td style="font-size:12px;color:#bbb;">${new Date(o.created_at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td>${statusBadge[o.status] || '—'}</td>
+      <td><div class="action-btns">
+        ${o.status === 0 ? `<button class="act-btn act-on" onclick="advanceOrder('${o.id}',1)">确认接单</button>` : ''}
+        ${o.status === 1 && o.delivery_type==='delivery' ? `<button class="act-btn act-purple" onclick="advanceOrder('${o.id}',2)">发货</button>` : ''}
+        ${o.status === 1 && o.delivery_type==='pickup'   ? `<button class="act-btn act-purple" onclick="advanceOrder('${o.id}',3)">通知自提</button>` : ''}
+        ${(o.status===2||o.status===3) ? `<button class="act-btn act-on" onclick="advanceOrder('${o.id}',4)">完成</button>` : ''}
+        ${o.status === 0 ? `<button class="act-btn act-del" onclick="advanceOrder('${o.id}',5)">取消</button>` : ''}
+        <button class="act-btn act-edit" onclick="viewOrder('${o.id}')">详情</button>
+      </div></td>
     </tr>`;
   }).join('');
+  const total = data.reduce((s, o) => s + parseFloat(o.pay_total || 0), 0);
+  document.getElementById('orders-count').textContent = `共 ${count || data.length} 笔 · 总额 ¥${total.toFixed(2)}`;
 }
 
-async function stopGroup(id) {
-  if (!confirm('确认终止该拼团？')) return;
-  await sb.from('group_sessions').update({ status: 2 }).eq('id', id);
-  loadGroups();
+async function advanceOrder(id, newStatus) {
+  const labels = {1:'确认接单',2:'标记发货',3:'通知自提',4:'标记完成',5:'取消订单'};
+  if (!confirm(`确认操作：${labels[newStatus]}？`)) return;
+  const { ok } = await sbPatch('orders', ['id=eq.' + id], { status: newStatus });
+  if (ok) loadOrders(); else alert('操作失败');
 }
 
-// ===== 用户管理 =====
-async function loadUsers() {
-  const { data } = await sb.from('users').select('*').order('created_at', { ascending: false }).limit(50);
-  const tbody = document.querySelector('#page-users .data-table tbody');
-  if (!tbody) return;
-  if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#999;">暂无用户</td></tr>';
+function viewOrder(id) {
+  alert('订单 #' + id + '\n详情弹窗开发中。目前可在上方表格直接操作订单状态。');
+}
+
+function exportOrders() {
+  alert('导出功能：将当前筛选结果导出为 CSV（开发中）');
+}
+
+// ===== DELIVERY =====
+let currentDeliveryType = 'delivery';
+
+async function loadDelivery(type, clickedTab) {
+  currentDeliveryType = type;
+  if (clickedTab) {
+    document.querySelectorAll('#page-delivery .order-tab').forEach(t => t.classList.remove('active'));
+    clickedTab.classList.add('active');
+  }
+  // 只显示待发货 / 配送中 / 待自提 的订单
+  const statusFilter = type === 'delivery' ? ['status=in.(1,2)'] : ['status=in.(1,3)'];
+  const { data } = await sbGet('orders', {
+    filters: [`delivery_type=eq.${type}`, ...statusFilter],
+    select: '*', order: 'created_at.asc', limit: 100,
+  });
+  const tbody = document.getElementById('delivery-tbody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#999;">暂无${type==='delivery'?'配送':'自提'}订单</td></tr>`;
+    document.getElementById('delivery-count').textContent = '共 0 笔';
     return;
   }
-  tbody.innerHTML = data.map(u => `
-    <tr>
-      <td><div style="display:flex;align-items:center;gap:8px;">
-        <div style="width:32px;height:32px;background:#FFF3EE;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#E64A0E;font-size:12px;font-weight:600;">${(u.nickname||'用').slice(0,1)}</div>
-        <span style="font-size:13px;font-weight:500;">${u.nickname||'未设置昵称'}</span>
+  const statusLabel = { 1:'待发货', 2:'配送中', 3:'待自提' };
+  const statusBadge = { 1:'<span class="badge badge-info">待发货</span>', 2:'<span class="badge badge-success">配送中</span>', 3:'<span class="badge badge-purple">待自提</span>' };
+  tbody.innerHTML = data.map(o => {
+    const addr = o.address ? (typeof o.address === 'string' ? JSON.parse(o.address) : o.address) : {};
+    const items = typeof o.items === 'string' ? JSON.parse(o.items || '[]') : (o.items || []);
+    const summary = items.map(i => i.name + '×' + i.qty).join(' / ');
+    return `<tr>
+      <td><input type="checkbox" class="delivery-cb" data-id="${o.id}"/></td>
+      <td style="font-size:12px;font-weight:600;">#${String(o.id).slice(-8)}</td>
+      <td style="font-size:12px;">${addr.name || '—'}<br><span style="color:#bbb;">${addr.tel || ''}</span></td>
+      <td style="font-size:12px;color:#555;">${(addr.region||'') + (addr.detail||'') || '自提'}</td>
+      <td style="font-size:12px;color:#666;">${summary}</td>
+      <td style="color:#E02020;font-weight:600;">¥${o.pay_total}</td>
+      <td style="font-size:12px;color:#bbb;">${new Date(o.created_at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td>${statusBadge[o.status] || ''}</td>
+      <td><div class="action-btns">
+        ${o.status===1 ? `<button class="act-btn act-purple" onclick="advanceDelivery('${o.id}',${type==='delivery'?2:3})">${type==='delivery'?'发货':'通知自提'}</button>` : ''}
+        ${o.status===2||o.status===3 ? `<button class="act-btn act-on" onclick="advanceDelivery('${o.id}',4)">完成</button>` : ''}
       </div></td>
-      <td style="font-size:12px;">${u.phone||'-'}</td>
-      <td style="font-size:12px;">-</td>
-      <td style="font-size:12px;color:#bbb;">${new Date(u.created_at).toLocaleDateString()}</td>
-      <td>-</td>
-      <td style="color:#E64A0E;font-weight:500;">-</td>
-      <td>${u.points||0}分</td>
-      <td><div class="action-btns"><button class="act-btn act-edit">详情</button></div></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
+  document.getElementById('delivery-count').textContent = `共 ${data.length} 笔`;
 }
 
-// ===== 初始加载 =====
-loadStats();
+async function advanceDelivery(id, newStatus) {
+  const { ok } = await sbPatch('orders', ['id=eq.' + id], { status: newStatus });
+  if (ok) loadDelivery(currentDeliveryType); else alert('操作失败');
+}
+
+function toggleDeliveryAll(cb) {
+  document.querySelectorAll('.delivery-cb').forEach(c => c.checked = cb.checked);
+}
+
+async function markAllShipping() {
+  const ids = [...document.querySelectorAll('.delivery-cb:checked')].map(c => c.dataset.id);
+  if (!ids.length) { alert('请先勾选要发货的订单'); return; }
+  if (!confirm(`批量发货 ${ids.length} 笔订单？`)) return;
+  for (const id of ids) await sbPatch('orders', ['id=eq.' + id], { status: currentDeliveryType === 'delivery' ? 2 : 3 });
+  loadDelivery(currentDeliveryType);
+}
+
+// ===== USERS =====
+async function loadUsers() {
+  const kw = document.getElementById('users-search')?.value?.trim() || '';
+  const filters = kw ? ['nickname=ilike.*' + encodeURIComponent(kw) + '*'] : [];
+  const { data } = await sbGet('users', { filters, select: '*', order: 'created_at.desc', limit: 50 });
+  const tbody = document.getElementById('users-tbody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">暂无用户</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(u => `<tr>
+    <td><div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:32px;height:32px;background:#FFF0F0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#E02020;font-size:12px;font-weight:600;">${(u.nickname||'用').slice(0,1)}</div>
+      <span style="font-size:13px;font-weight:500;">${u.nickname || '未设置'}</span>
+    </div></td>
+    <td style="font-size:12px;">${u.phone || '—'}</td>
+    <td style="font-size:12px;color:#bbb;">${new Date(u.created_at).toLocaleDateString()}</td>
+    <td>${u.order_count || '—'}</td>
+    <td style="color:#E02020;font-weight:500;">¥${u.total_spent || '—'}</td>
+    <td>${u.points || 0} 分</td>
+    <td><div class="action-btns"><button class="act-btn act-edit">详情</button></div></td>
+  </tr>`).join('');
+}
+
+function exportUsers() { alert('导出用户数据（CSV）开发中'); }
+
+// ===== COUPONS =====
+async function loadCoupons() {
+  // 从本地配置读取，后续可接 coupons 表
+  const tbody = document.getElementById('coupon-tbody');
+  tbody.innerHTML = `
+    <tr><td style="font-weight:500;">🎁 新人专享券</td><td style="color:#E02020;font-weight:600;">¥5</td><td style="font-size:12px;">满¥30</td><td style="font-size:12px;color:#bbb;">领取后7天</td><td style="font-size:12px;">1,200/2,000</td><td><span class="badge badge-success">发放中</span></td><td><div class="action-btns"><button class="act-btn act-del">停止</button></div></td></tr>
+    <tr><td style="font-weight:500;">🎫 满减优惠券</td><td style="color:#E02020;font-weight:600;">¥10</td><td style="font-size:12px;">满¥60</td><td style="font-size:12px;color:#bbb;">2024-12-31</td><td style="font-size:12px;">88/500</td><td><span class="badge badge-warn">即将到期</span></td><td><div class="action-btns"><button class="act-btn act-del">停止</button></div></td></tr>
+  `;
+}
+
+function openCouponForm() {
+  const f = document.getElementById('coupon-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+async function saveCoupon() {
+  const name   = document.getElementById('cf-name')?.value?.trim();
+  const amount = document.getElementById('cf-amount')?.value;
+  const min    = document.getElementById('cf-min')?.value || 0;
+  const total  = document.getElementById('cf-total')?.value || 1000;
+  const expire = document.getElementById('cf-expire')?.value;
+  const scope  = document.getElementById('cf-scope')?.value || '全场通用';
+  if (!name || !amount) { alert('请填写券名和面值'); return; }
+  const { ok } = await sbPost('coupons', { name, amount: Number(amount), min_order: Number(min), total_count: Number(total), expire_at: expire, scope, status: 1 });
+  if (ok) { alert('优惠券创建成功！'); document.getElementById('coupon-form').style.display = 'none'; loadCoupons(); }
+  else alert('创建失败，请确认 Supabase 中存在 coupons 表');
+}
+
+// ===== SETTINGS =====
+function saveSettings() {
+  const settings = {
+    name:           document.getElementById('set-name')?.value,
+    phone:          document.getElementById('set-phone')?.value,
+    delivery_fee:   document.getElementById('set-fee')?.value,
+    free_threshold: document.getElementById('set-free-threshold')?.value,
+    delivery_range: document.getElementById('set-range')?.value,
+    pickup_address: document.getElementById('set-pickup-addr')?.value,
+  };
+  localStorage.setItem('shop_settings', JSON.stringify(settings));
+  alert('✅ 设置已保存（存储在本地）');
+}
+
+// ===== 初始化 =====
+loadDashboard();
 </script>
 </body>
 </html>
