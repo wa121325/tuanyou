@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>大姚优鲜 · 管理后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:#F5F5F5;color:#333;font-size:14px;height:100vh;overflow:hidden}
+.layout{display:flex;height:100vh}
+.sidebar{width:220px;background:#fff;border-right:1px solid #EBEBEB;display:flex;flex-direction:column;flex-shrink:0}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{height:54px;background:#fff;border-bottom:1px solid #EBEBEB;display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:20px 24px}
+.logo{padding:16px;border-bottom:1px solid #EBEBEB;display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;background:#E02020;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;flex-shrink:0}
+.logo-text{font-size:15px;font-weight:600}.logo-sub{font-size:11px;color:#999;margin-top:1px}
+.nav-body{flex:1;padding:10px;overflow-y:auto}
+.nav-sec{font-size:11px;color:#bbb;padding:10px 8px 4px;letter-spacing:.05em}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;color:#666;margin-bottom:2px;font-size:13px;transition:background .12s}
+.nav-item:hover{background:#F5F5F5}.nav-item.active{background:#FFF0F0;color:#C01010;font-weight:500}
+.nav-badge{margin-left:auto;background:#E02020;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600}
+.sb-user{padding:14px 16px;border-top:1px solid #EBEBEB;display:flex;align-items:center;gap:10px}
+.ua{width:32px;height:32px;background:#FFF0F0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#E02020;font-weight:600;font-size:13px}
+.topbar-title{font-size:16px;font-weight:600}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.tb-date{font-size:12px;color:#999}
+.nb{position:relative;cursor:pointer;font-size:18px}
+.nd{position:absolute;top:-3px;right:-4px;width:16px;height:16px;background:#E02020;border-radius:8px;font-size:9px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+.btn{padding:7px 16px;border-radius:7px;font-size:13px;border:1px solid #DDD;background:#fff;color:#555;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:#F5F5F5}
+.btn-primary{background:#E02020;color:#fff;border-color:#E02020}.btn-primary:hover{background:#C01010}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-success{background:#2E7D32;color:#fff;border-color:#2E7D32}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:10px;padding:16px 18px;border:1px solid #EBEBEB}
+.stat-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:20px}
+.stat-label{font-size:12px;color:#999;margin-bottom:5px}
+.stat-val{font-size:26px;font-weight:600;color:#222;line-height:1}
+.stat-trend{font-size:12px;margin-top:6px;color:#999}
+.panel{background:#fff;border-radius:10px;border:1px solid #EBEBEB;overflow:hidden;margin-bottom:14px}
+.ph{padding:14px 18px;border-bottom:1px solid #EBEBEB;display:flex;align-items:center;justify-content:space-between}
+.pt{font-size:14px;font-weight:600}
+.pb{padding:16px 18px}
+.tw{background:#fff;border-radius:10px;border:1px solid #EBEBEB;overflow:hidden}
+.dt{width:100%;border-collapse:collapse}
+.dt th{background:#FAFAFA;padding:10px 14px;text-align:left;font-weight:500;font-size:12px;color:#888;border-bottom:1px solid #EBEBEB;white-space:nowrap}
+.dt td{padding:11px 14px;border-bottom:1px solid #F5F5F5;font-size:13px;vertical-align:middle}
+.dt tbody tr:last-child td{border-bottom:none}
+.dt tbody tr:hover td{background:#FFFAFA}
+.gc{display:flex;align-items:center;gap:10px}
+.gth{width:40px;height:40px;border-radius:8px;background:#F8F8F8;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.gn{font-weight:500;font-size:13px;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs{font-size:11px;color:#bbb;margin-top:2px}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:500;white-space:nowrap}
+.bs{background:#EAF5E4;color:#1B5E20}.bw{background:#FFF3E0;color:#7B3B00}
+.bi{background:#E3F2FD;color:#0D47A1}.bd{background:#FFEBEE;color:#B71C1C}
+.bp{background:#EDE7F6;color:#4527A0}.bg{background:#F0F0F0;color:#777}
+.ab{display:flex;gap:5px;flex-wrap:nowrap}
+.ac{padding:3px 9px;border-radius:5px;font-size:11px;border:1px solid #DDD;color:#666;cursor:pointer;background:transparent}
+.ac:hover{background:#F5F5F5}
+.ae{border-color:#185FA5;color:#185FA5}.ae:hover{background:#E3F2FD}
+.ad{border-color:#B71C1C;color:#B71C1C}.ad:hover{background:#FFEBEE}
+.ao{border-color:#1B5E20;color:#1B5E20}.ao:hover{background:#EAF5E4}
+.aw{border-color:#E02020;color:#E02020}.aw:hover{background:#FFF0F0}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sw{position:relative}
+.sw input{padding:7px 12px 7px 34px;border:1px solid #DDD;border-radius:7px;font-size:13px;width:220px;background:#fff}
+.sw input:focus{border-color:#E02020}
+.si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#bbb}
+.fs{padding:7px 10px;border:1px solid #DDD;border-radius:7px;font-size:13px;color:#555;background:#fff;cursor:pointer}
+.otabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.otab{padding:6px 16px;border-radius:20px;font-size:13px;border:1px solid #DDD;color:#666;cursor:pointer;white-space:nowrap}
+.otab.active{background:#E02020;color:#fff;border-color:#E02020}
+.otab:hover:not(.active){background:#F5F5F5}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fgroup{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:12px;font-weight:500;color:#555}
+.fl .req{color:#E02020}
+.fi{padding:9px 12px;border:1px solid #DDD;border-radius:7px;font-size:13px;color:#333;background:#fff}
+.fi:focus{border-color:#E02020;outline:none}
+.fhint{font-size:11px;color:#bbb}
+.ff{display:flex;justify-content:flex-end;gap:8px;padding-top:16px;margin-top:16px;border-top:1px solid #EBEBEB}
+.pager{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.pi{font-size:12px;color:#999}
+.pg{display:flex;gap:4px}
+.pgb{padding:5px 11px;border:1px solid #DDD;border-radius:5px;font-size:12px;color:#555;cursor:pointer;background:#fff}
+.pgb.active{background:#E02020;color:#fff;border-color:#E02020}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.page{display:none}.page.active{display:block}
+pre{white-space:pre-wrap;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">鲜</div>
+    <div><div class="logo-text">大姚优鲜</div><div class="logo-sub">社区超市管理后台</div></div>
+  </div>
+  <nav class="nav-body">
+    <div class="nav-sec">概览</div>
+    <div class="nav-item active" data-page="dash">📊 数据看板</div>
+    <div class="nav-sec">商品</div>
+    <div class="nav-item" data-page="goods">📦 上架中商品</div>
+    <div class="nav-item" data-page="offgoods">📴 已下架商品</div>
+    <div class="nav-item" data-page="addgoods">➕ 上架商品</div>
+    <div class="nav-item" data-page="banner">🖼 Banner管理</div>
+    <div class="nav-sec">订单配送</div>
+    <div class="nav-item" data-page="orders">📋 订单管理 <span class="nav-badge" id="badge-order">0</span></div>
+    <div class="nav-item" data-page="delivery">🚚 配送管理</div>
+    <div class="nav-sec">用户运营</div>
+    <div class="nav-item" data-page="coupon">🎫 优惠券</div>
+    <div class="nav-item" data-page="luckydraw">🎰 幸运转盘</div>
+    <div class="nav-sec">系统</div>
+    <div class="nav-item" data-page="settings">⚙️ 系统设置</div>
+  </nav>
+  <div class="sb-user">
+    <div class="ua">管</div>
+    <div><div style="font-size:13px;font-weight:500">超级管理员</div><div style="font-size:11px;color:#999">大姚优鲜</div></div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">数据看板</div>
+    <div class="topbar-right">
+      <div class="tb-date" id="tb-date"></div>
+      <div class="nb">🔔<span class="nd" id="notif-n">0</span></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ===== 看板 ===== -->
+  <div class="page active" id="page-dash">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon" style="background:#FFF0F0">💰</div><div class="stat-label">今日营业额</div><div class="stat-val" id="s-rev">¥—</div><div class="stat-trend" id="s-rev-t">加载中</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#E3F2FD">📋</div><div class="stat-label">今日订单</div><div class="stat-val" id="s-ord">—</div><div class="stat-trend">全部订单数</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#FFF3E0">🚚</div><div class="stat-label">待配送</div><div class="stat-val" id="s-ship">—</div><div class="stat-trend">送上门待处理</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#EDE7F6">🏪</div><div class="stat-label">待自提</div><div class="stat-val" id="s-pick">—</div><div class="stat-trend">到店自提待处理</div></div>
+    </div>
+    <div class="row2">
+      <div class="panel">
+        <div class="ph"><span class="pt">最新订单</span><span style="font-size:12px;color:#999;cursor:pointer" onclick="goPage('orders')">全部 ›</span></div>
+        <div style="padding:0 18px" id="dash-orders"><div style="color:#bbb;padding:20px 0;font-size:13px">加载中…</div></div>
+        <div style="height:12px"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><span class="pt">库存预警</span><span style="font-size:12px;color:#999;cursor:pointer" onclick="goPage('goods')">查看 ›</span></div>
+        <div class="pb" id="dash-stock"><div style="color:#bbb;font-size:13px">加载中…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 商品管理 ===== -->
+  <div class="page" id="page-goods">
+    <div class="toolbar">
+      <div class="sw"><span class="si">🔍</span><input id="g-kw" placeholder="搜索商品名称…" oninput="loadGoods()"/></div>
+      <select id="g-cat" class="fs" onchange="loadGoods()">
+        <option value="">全部分类</option>
+        <option value="1">蔬菜</option><option value="2">水果</option><option value="3">肉禽</option>
+        <option value="4">海鲜</option><option value="5">蛋奶</option><option value="6">粮油</option>
+        <option value="7">豆制品</option><option value="8">日用品</option>
+      </select>
+
+      <div style="margin-left:auto"><button class="btn btn-primary btn-sm" onclick="goPage('addgoods')">+ 上架商品</button></div>
+    </div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>商品</th><th>分类</th><th>售价</th><th>划线价</th><th>单位</th><th>库存</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody id="goods-tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:#999">加载中…</td></tr></tbody>
+    </table></div>
+    <div class="pager"><span id="g-count" class="pi">—</span></div>
+  </div>
+
+  <!-- ===== 已下架商品 ===== -->
+  <div class="page" id="page-offgoods">
+    <div class="toolbar">
+      <div class="sw"><span class="si">🔍</span><input id="og-kw" placeholder="搜索商品名称…" oninput="loadOffGoods()"/></div>
+      <select id="og-cat" class="fs" onchange="loadOffGoods()">
+        <option value="">全部分类</option>
+        <option value="1">蔬菜</option><option value="2">水果</option><option value="3">肉禽</option>
+        <option value="4">海鲜</option><option value="5">蛋奶</option><option value="6">粮油</option>
+        <option value="7">豆制品</option><option value="8">日用品</option>
+      </select>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="btn btn-sm" onclick="batchDelete()">批量删除</button>
+        <button class="btn btn-primary btn-sm" onclick="batchRestore()">批量重新上架</button>
+      </div>
+    </div>
+    <div style="background:#FFF3E0;border:1px solid #FFE0B2;border-radius:8px;padding:10px 16px;margin-bottom:14px;font-size:13px;color:#7B3B00">
+      ⚠️ 此页面显示所有已下架商品。可重新上架或永久删除。
+    </div>
+    <div class="tw"><table class="dt">
+      <thead><tr>
+        <th><input type="checkbox" id="og-all" onchange="toggleOGAll(this)"/></th>
+        <th>商品</th><th>分类</th><th>售价</th><th>库存</th><th>下架时间</th><th>操作</th>
+      </tr></thead>
+      <tbody id="offgoods-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:#999">加载中…</td></tr></tbody>
+    </table></div>
+    <div class="pager"><span id="og-count" class="pi">—</span></div>
+  </div>
+
+  <!-- ===== 上架商品 ===== -->
+  <div class="page" id="page-addgoods">
+    <div class="panel">
+      <div class="ph"><span class="pt" id="ag-title">上架新商品</span></div>
+      <div class="pb">
+        <input type="hidden" id="ag-id"/>
+        <table style="width:100%;border-collapse:collapse">
+          <tr>
+            <td style="width:58%;vertical-align:top;padding-right:28px;border-right:1px solid #F0F0F0">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div class="fgroup"><label class="fl">商品名称 <span class="req">*</span></label><input id="ag-name" class="fi" placeholder="例：有机西兰花 当日采摘"/></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div class="fgroup"><label class="fl">分类 <span class="req">*</span></label>
+                    <select id="ag-cat" class="fi"><option value="1">蔬菜</option><option value="2">水果</option><option value="3">肉禽</option><option value="4">海鲜</option><option value="5">蛋奶</option><option value="6">粮油</option><option value="7">豆制品</option><option value="8">日用品</option></select>
+                  </div>
+                  <div class="fgroup"><label class="fl">计量单位 <span class="req">*</span></label><input id="ag-unit" class="fi" placeholder="斤/个/盒/500g"/></div>
+                  <div class="fgroup"><label class="fl">售价（元）<span class="req">*</span></label><input id="ag-price" class="fi" type="number" placeholder="5.50" step="0.01"/></div>
+                  <div class="fgroup"><label class="fl">划线价（元）</label><input id="ag-ori" class="fi" type="number" placeholder="9.90" step="0.01"/></div>
+                  <div class="fgroup"><label class="fl">库存 <span class="req">*</span></label><input id="ag-stock" class="fi" type="number" placeholder="500"/></div>
+                  <div class="fgroup"><label class="fl">库存预警值</label><input id="ag-warn" class="fi" type="number" placeholder="20"/><div class="fhint">低于此值显示预警</div></div>
+                  <div class="fgroup"><label class="fl">加入今日特惠</label><select id="ag-hot" class="fi"><option value="true">是</option><option value="false">否</option></select></div>
+                  <div class="fgroup"><label class="fl">加入新品上架</label><select id="ag-new" class="fi"><option value="true">是</option><option value="false">否</option></select></div>
+                </div>
+                <div class="fgroup"><label class="fl">卖点标签</label><input id="ag-tags" class="fi" placeholder="当日采摘, 有机认证（逗号分隔）"/></div>
+                <div class="fgroup"><label class="fl">商品详情</label><textarea id="ag-detail" class="fi" rows="5" placeholder="产地、新鲜程度、储存方法…"></textarea></div>
+              </div>
+            </td>
+            <td style="width:42%;vertical-align:top;padding-left:28px">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <label class="fl">商品图片</label>
+                <div id="ag-img-box" onclick="document.getElementById('ag-img-file').click()"
+                  style="width:100%;height:280px;border-radius:12px;background:#FAFAFA;border:2px dashed #DDDDDD;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative"
+                  onmouseover="this.style.borderColor='#E02020';this.style.background='#FFF8F8'"
+                  onmouseout="this.style.borderColor='#DDD';this.style.background='#FAFAFA'">
+                  <img id="ag-img-thumb" src="" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>
+                  <div id="ag-img-hint" style="text-align:center;color:#bbb">
+                    <div style="font-size:52px;line-height:1;margin-bottom:12px">📷</div>
+                    <div style="font-size:14px;color:#888;font-weight:500">点击上传商品图片</div>
+                    <div style="font-size:11px;color:#bbb;margin-top:6px">支持 JPG · PNG · WEBP<br>建议尺寸 800 × 800 px</div>
+                  </div>
+                  <div id="ag-uploading-bar" style="display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(224,32,32,0.85);color:#fff;font-size:12px;text-align:center;padding:8px">⏳ 上传中，请稍候…</div>
+                </div>
+                <input type="file" id="ag-img-file" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="previewAndUploadImg(this)"/>
+                <div id="ag-img-status" style="font-size:12px;min-height:16px;color:#999"></div>
+                <div>
+                  <label class="fl" style="margin-bottom:6px;display:block">或填写图片URL</label>
+                  <input id="ag-cover" class="fi" style="font-size:12px" placeholder="https://…" oninput="onCoverUrlInput(this.value)"/>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div class="ff">
+          <button class="btn" onclick="goPage('goods')">取消</button>
+          <button class="btn" onclick="submitGoods(0)">保存草稿</button>
+          <button class="btn btn-primary" onclick="submitGoods(1)">立即上架</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- ===== Banner ===== -->
+  <div class="page" id="page-banner">
+    <div class="toolbar"><div style="margin-left:auto"><button class="btn btn-primary btn-sm" onclick="openBannerForm()">+ 新增Banner</button></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>预览</th><th>标题</th><th>副标题</th><th>跳转商品ID</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody id="banner-tbody"><tr><td colspan="7" style="text-align:center;padding:30px;color:#999">加载中…</td></tr></tbody>
+    </table></div>
+    <div class="panel" id="banner-form" style="display:none;margin-top:14px">
+      <div class="ph"><span class="pt" id="bf-title-label">新增Banner</span></div>
+      <div class="pb">
+        <input type="hidden" id="bf-id"/>
+        <div class="fg" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="fgroup"><label class="fl">标题 *</label><input id="bf-title" class="fi" placeholder="新鲜蔬菜每日直采"/></div>
+          <div class="fgroup"><label class="fl">副标题</label><input id="bf-sub" class="fi" placeholder="今日特惠 · 限量供应"/></div>
+          <div class="fgroup"><label class="fl">Emoji图标</label><input id="bf-emoji" class="fi" placeholder="🥦" maxlength="2"/></div>
+          <div class="fgroup"><label class="fl">背景颜色</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="bf-color" class="fi" placeholder="#2E7D32" style="flex:1"/>
+              <input type="color" id="bf-cpicker" value="#2E7D32" oninput="document.getElementById('bf-color').value=this.value" style="width:36px;height:36px;border:1px solid #DDD;border-radius:6px;padding:2px;cursor:pointer"/>
+            </div>
+          </div>
+          <div class="fgroup"><label class="fl">跳转商品ID</label><input id="bf-linkid" class="fi" type="number" placeholder="留空跳分类列表"/></div>
+          <div class="fgroup"><label class="fl">排序</label><input id="bf-sort" class="fi" type="number" placeholder="1"/></div>
+        </div>
+        <div class="ff"><button class="btn" onclick="document.getElementById('banner-form').style.display='none'">取消</button><button class="btn btn-primary" onclick="saveBanner()">保存上线</button></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <div class="ph"><span class="pt">📋 建表SQL（首次使用执行）</span><button class="btn btn-sm" onclick="copySql('banner-sql')">复制</button></div>
+      <pre id="banner-sql" style="background:#1e1e1e;color:#d4d4d4;padding:16px;margin:12px 18px;border-radius:8px;font-size:12px;line-height:1.6">-- 如果banners表已存在，补全缺失字段
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS subtitle text;
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS emoji text DEFAULT '🛒';
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS bg_color text DEFAULT '#E02020';
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS link_id int;
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS sort_order int DEFAULT 1;
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS enabled boolean DEFAULT true;
+
+-- 如果banners表不存在则新建
+CREATE TABLE IF NOT EXISTS banners (
+  id         serial primary key,
+  title      text not null,
+  subtitle   text,
+  emoji      text default '🛒',
+  bg_color   text default '#E02020',
+  link_id    int,
+  sort_order int default 1,
+  enabled    boolean default true,
+  created_at timestamptz default now()
+);
+
+-- 插入默认数据（已存在则跳过）
+INSERT INTO banners (title,subtitle,emoji,bg_color,sort_order,enabled)
+SELECT '新鲜蔬菜每日直采','今日特惠·限量供应','🥦','#2E7D32',1,true
+WHERE NOT EXISTS (SELECT 1 FROM banners WHERE title='新鲜蔬菜每日直采');
+
+INSERT INTO banners (title,subtitle,emoji,bg_color,sort_order,enabled)
+SELECT '精选肉类冷鲜直送','品质保证·放心购买','🥩','#C62828',2,true
+WHERE NOT EXISTS (SELECT 1 FROM banners WHERE title='精选肉类冷鲜直送');
+
+INSERT INTO banners (title,subtitle,emoji,bg_color,sort_order,enabled)
+SELECT '应季水果新鲜到家','源头直采·天天上新','🍎','#E65100',3,true
+WHERE NOT EXISTS (SELECT 1 FROM banners WHERE title='应季水果新鲜到家');</pre>
+    </div>
+  </div>
+
+  <!-- ===== 订单管理 ===== -->
+  <div class="page" id="page-orders">
+    <div class="otabs" id="order-tabs">
+      <div class="otab active" data-st="">全部</div>
+      <div class="otab" data-st="0">待付款</div>
+      <div class="otab" data-st="1">待发货</div>
+      <div class="otab" data-st="2">配送中</div>
+      <div class="otab" data-st="3">待自提</div>
+      <div class="otab" data-st="4">已完成</div>
+      <div class="otab" data-st="5">已取消</div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <div class="sw"><span class="si">🔍</span><input id="o-kw" placeholder="订单号…" oninput="loadOrders()"/></div>
+      </div>
+    </div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>订单号</th><th>收货人</th><th>商品</th><th>实付</th><th>配送</th><th>下单时间</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody id="orders-tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:#999">加载中…</td></tr></tbody>
+    </table></div>
+    <div class="pager"><span id="o-count" class="pi">—</span></div>
+  </div>
+
+  <!-- ===== 配送管理 ===== -->
+  <div class="page" id="page-delivery">
+    <div class="toolbar">
+      <div class="otabs" style="margin-bottom:0">
+        <div class="otab active" onclick="loadDelivery('delivery',this)">🚚 送上门</div>
+        <div class="otab" onclick="loadDelivery('pickup',this)">🏪 到店自提</div>
+      </div>
+      <div style="margin-left:auto"><button class="btn btn-primary btn-sm" onclick="batchShip()">批量发货</button></div>
+    </div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th><input type="checkbox" id="del-all" onchange="toggleDelAll(this)"/></th><th>订单号</th><th>收货人</th><th>地址</th><th>商品</th><th>金额</th><th>下单时间</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody id="delivery-tbody"><tr><td colspan="9" style="text-align:center;padding:40px;color:#999">加载中…</td></tr></tbody>
+    </table></div>
+    <div class="pager"><span id="del-count" class="pi">—</span></div>
+  </div>
+
+  <!-- ===== 优惠券 ===== -->
+  <div class="page" id="page-coupon">
+    <div class="toolbar"><div style="margin-left:auto"><button class="btn btn-primary btn-sm" onclick="openCouponForm()">+ 新建优惠券</button></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>券名</th><th>面值</th><th>门槛</th><th>有效期</th><th>适用范围</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody id="coupon-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:#999">加载中…</td></tr></tbody>
+    </table></div>
+    <div class="panel" id="coupon-form" style="display:none;margin-top:14px">
+      <div class="ph"><span class="pt">新建优惠券</span></div>
+      <div class="pb">
+        <input type="hidden" id="cf-id"/>
+        <div class="fg">
+          <div class="fgroup"><label class="fl">券名 *</label><input id="cf-name" class="fi" placeholder="新人专享券"/></div>
+          <div class="fgroup"><label class="fl">面值（元）*</label><input id="cf-amt" class="fi" type="number" placeholder="5"/></div>
+          <div class="fgroup"><label class="fl">使用门槛（满X元）</label><input id="cf-min" class="fi" type="number" placeholder="30"/></div>
+          <div class="fgroup"><label class="fl">发放总量</label><input id="cf-total" class="fi" type="number" placeholder="1000"/></div>
+          <div class="fgroup"><label class="fl">有效期至</label><input id="cf-exp" class="fi" type="date"/></div>
+          <div class="fgroup"><label class="fl">适用范围</label><input id="cf-scope" class="fi" placeholder="全场通用"/></div>
+        </div>
+        <div class="ff"><button class="btn" onclick="document.getElementById('coupon-form').style.display='none'">取消</button><button class="btn btn-primary" onclick="saveCoupon()">创建并发放</button></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <div class="ph"><span class="pt">📋 建表SQL</span><button class="btn btn-sm" onclick="copySql('coupon-sql')">复制</button></div>
+      <pre id="coupon-sql" style="background:#1e1e1e;color:#d4d4d4;padding:16px;margin:12px 18px;border-radius:8px;font-size:12px;line-height:1.6">CREATE TABLE IF NOT EXISTS coupons (
+  id          serial primary key,
+  name        text not null,
+  amount      numeric default 0,
+  min_order   numeric default 0,
+  total_count int default 1000,
+  used_count  int default 0,
+  expire_at   date,
+  scope       text default '全场通用',
+  status      int default 1,
+  created_at  timestamptz default now()
+);</pre>
+    </div>
+  </div>
+
+  <!-- ===== 幸运转盘 ===== -->
+  <div class="page" id="page-luckydraw">
+    <div class="panel" style="margin-bottom:14px">
+      <div class="ph"><span class="pt">🎰 转盘活动控制</span>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span id="ld-status-txt" style="font-size:13px;color:#999">加载中…</span>
+          <button id="ld-toggle-btn" class="btn btn-primary btn-sm" onclick="toggleLD()">开启</button>
+        </div>
+      </div>
+      <div class="pb">
+        <div class="fg" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="fgroup"><label class="fl">弹窗标题</label><input id="ld-title" class="fi" placeholder="新人专享福利"/></div>
+          <div class="fgroup"><label class="fl">副标题</label><input id="ld-sub" class="fi" placeholder="限时领取·今日有效"/></div>
+          <div class="fgroup"><label class="fl">每日基础次数</label><input id="ld-daily" class="fi" type="number" placeholder="1"/></div>
+          <div class="fgroup"><label class="fl">分享额外次数上限</label><input id="ld-extra" class="fi" type="number" placeholder="2"/><div class="fhint">每天分享最多获得几次</div></div>
+        </div>
+        <div class="ff"><button class="btn btn-primary" onclick="saveLDConfig()">保存配置</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="pt">奖品管理</span><button class="btn btn-primary btn-sm" onclick="openPrizeForm()">+ 新增奖品</button></div>
+      <div class="tw" style="border:none;border-radius:0"><table class="dt">
+        <thead><tr><th>奖品</th><th>类型</th><th>面值</th><th>门槛</th><th>权重</th><th>概率</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody id="prizes-tbody"><tr><td colspan="8" style="text-align:center;padding:30px;color:#999">加载中…</td></tr></tbody>
+      </table></div>
+      <div style="padding:10px 18px;font-size:12px;color:#888;background:#FFFBF0;border-top:1px solid #EBEBEB">💡 权重为相对值，实际概率 = 该奖品权重 / 所有奖品权重之和 × 100%</div>
+    </div>
+    <div class="panel" id="prize-form-panel" style="display:none;margin-top:14px">
+      <div class="ph"><span class="pt" id="pf-title">新增奖品</span></div>
+      <div class="pb">
+        <input type="hidden" id="pf-id"/>
+        <div class="fg" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="fgroup"><label class="fl">奖品名称 *</label><input id="pf-name" class="fi" placeholder="5元优惠券"/></div>
+          <div class="fgroup"><label class="fl">Emoji</label><input id="pf-emoji" class="fi" placeholder="🎫" maxlength="2"/></div>
+          <div class="fgroup"><label class="fl">类型</label>
+            <select id="pf-type" class="fi" onchange="onPrizeType()">
+              <option value="coupon">优惠券</option><option value="points">积分</option>
+              <option value="retry">再抽一次</option><option value="empty">谢谢参与</option>
+            </select>
+          </div>
+          <div class="fgroup" id="pf-val-wrap"><label class="fl" id="pf-val-lbl">面值（元）</label><input id="pf-val" class="fi" type="number" placeholder="5" step="0.5"/></div>
+          <div class="fgroup" id="pf-min-wrap"><label class="fl">使用门槛（满X元）</label><input id="pf-min" class="fi" type="number" placeholder="30"/></div>
+          <div class="fgroup"><label class="fl">中奖权重</label><input id="pf-prob" class="fi" type="number" placeholder="10"/><div class="fhint">数字越大概率越高</div></div>
+          <div class="fgroup"><label class="fl">扇区颜色</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="pf-color" class="fi" placeholder="#FFF0F0" style="flex:1"/>
+              <input type="color" id="pf-cpicker" value="#FFF0F0" oninput="document.getElementById('pf-color').value=this.value" style="width:36px;height:36px;border:1px solid #DDD;border-radius:6px;padding:2px;cursor:pointer"/>
+            </div>
+          </div>
+          <div class="fgroup"><label class="fl">排序</label><input id="pf-sort" class="fi" type="number" placeholder="1"/></div>
+        </div>
+        <div class="ff"><button class="btn" onclick="document.getElementById('prize-form-panel').style.display='none'">取消</button><button class="btn btn-primary" onclick="savePrize()">保存奖品</button></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <div class="ph"><span class="pt">📋 建表SQL（首次使用执行）</span><button class="btn btn-sm" onclick="copySql('ld-sql')">复制</button></div>
+      <pre id="ld-sql" style="background:#1e1e1e;color:#d4d4d4;padding:16px;margin:12px 18px;border-radius:8px;font-size:12px;line-height:1.6">CREATE TABLE IF NOT EXISTS lucky_draw_config (
+  id          int primary key default 1,
+  enabled     boolean default true,
+  title       text default '新人专享福利',
+  subtitle    text default '限时领取·今日有效',
+  daily_limit int default 1,
+  share_extra int default 2,
+  updated_at  timestamptz default now()
+);
+CREATE TABLE IF NOT EXISTS lucky_draw_prizes (
+  id          serial primary key,
+  name        text not null,
+  emoji       text default '🎁',
+  type        text default 'coupon',
+  value       numeric default 0,
+  min_order   numeric default 0,
+  probability int default 10,
+  color       text default '#FFF0F0',
+  enabled     boolean default true,
+  sort_order  int default 0
+);
+INSERT INTO lucky_draw_config (id,enabled,title,subtitle,daily_limit,share_extra)
+VALUES (1,true,'新人专享福利','每天抽1次，分享可多抽',1,2) ON CONFLICT (id) DO NOTHING;
+INSERT INTO lucky_draw_prizes (name,emoji,type,value,min_order,probability,color,sort_order) VALUES
+('5元优惠券','🎫','coupon',5,30,15,'#FF6B6B',1),
+('谢谢参与','😊','empty',0,0,20,'#FFB347',2),
+('3元优惠券','🎫','coupon',3,20,25,'#87CEEB',3),
+('积分+20','💰','points',20,0,20,'#98D98E',4),
+('再来一次','🔄','retry',0,0,10,'#DDA0DD',5),
+('10元优惠券','🎁','coupon',10,50,5,'#F0E68C',6),
+('免运费','🚚','coupon',0,0,5,'#FFA07A',7)
+ON CONFLICT DO NOTHING;
+
+-- ⚠️ 关键：开启RLS并允许所有操作（管理后台和小程序都能读写）
+ALTER TABLE lucky_draw_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lucky_draw_prizes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE goods ENABLE ROW LEVEL SECURITY;
+ALTER TABLE banners ENABLE ROW LEVEL SECURITY;
+ALTER TABLE coupons ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "allow_all_lucky_config" ON lucky_draw_config;
+DROP POLICY IF EXISTS "allow_all_lucky_prizes" ON lucky_draw_prizes;
+DROP POLICY IF EXISTS "allow_all_orders" ON orders;
+DROP POLICY IF EXISTS "allow_all_goods" ON goods;
+DROP POLICY IF EXISTS "allow_all_banners" ON banners;
+DROP POLICY IF EXISTS "allow_all_coupons" ON coupons;
+
+CREATE POLICY "allow_all_lucky_config" ON lucky_draw_config FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_lucky_prizes" ON lucky_draw_prizes FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_orders" ON orders FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_goods" ON goods FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_banners" ON banners FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_coupons" ON coupons FOR ALL USING (true) WITH CHECK (true);</pre>
+    </div>
+  </div>
+
+  <!-- ===== 系统设置 ===== -->
+  <div class="page" id="page-settings">
+
+    <!-- 一键修复 -->
+    <div class="panel" style="max-width:560px;margin-bottom:14px;border:2px solid #E02020">
+      <div class="ph" style="background:#FFF0F0"><span class="pt" style="color:#C01010">🔧 第一步：数据库读写权限（必须执行）</span><button class="btn btn-primary btn-sm" onclick="copySql('rls-sql')">复制SQL</button></div>
+      <div class="pb">
+        <div style="font-size:13px;color:#666;margin-bottom:12px">如果后台保存任何数据失败，执行此SQL即可解决。只需执行一次。</div>
+        <pre id="rls-sql" style="background:#1e1e1e;color:#d4d4d4;padding:16px;border-radius:8px;font-size:12px;line-height:1.6">-- 一键开放所有表的读写权限
+DO $$
+DECLARE
+  t text;
+BEGIN
+  FOREACH t IN ARRAY ARRAY['goods','orders','banners','coupons','lucky_draw_config','lucky_draw_prizes','users','categories','cart_items','stations','user_coupons','group_sessions']
+  LOOP
+    BEGIN
+      EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
+    EXCEPTION WHEN others THEN NULL;
+    END;
+    BEGIN
+      EXECUTE format('DROP POLICY IF EXISTS "allow_all_%s" ON %I', t, t);
+    EXCEPTION WHEN others THEN NULL;
+    END;
+    BEGIN
+      EXECUTE format('CREATE POLICY "allow_all_%s" ON %I FOR ALL USING (true) WITH CHECK (true)', t, t);
+    EXCEPTION WHEN others THEN NULL;
+    END;
+  END LOOP;
+END $$;</pre>
+      </div>
+    </div>
+
+    <div class="panel" style="max-width:560px;margin-bottom:14px">
+      <div class="ph"><span class="pt">基本设置</span></div>
+      <div class="pb">
+        <div class="fg">
+          <div class="fgroup"><label class="fl">商城名称</label><input class="fi" id="set-name" value="大姚优鲜"/></div>
+          <div class="fgroup"><label class="fl">客服电话</label><input class="fi" id="set-phone" value="400-888-0001"/></div>
+          <div class="fgroup"><label class="fl">配送费（元）</label><input class="fi" type="number" id="set-fee" value="3"/></div>
+          <div class="fgroup"><label class="fl">免配送费门槛（元）</label><input class="fi" type="number" id="set-free" value="30"/></div>
+          <div class="fgroup" style="grid-column:1/-1"><label class="fl">配送范围</label><input class="fi" id="set-range" value="大姚县城区 2小时内配送"/></div>
+          <div class="fgroup" style="grid-column:1/-1"><label class="fl">自提地址</label><input class="fi" id="set-pickup" value="大姚县城营业点"/></div>
+        </div>
+        <div class="ff"><button class="btn btn-primary" onclick="saveSettings()">保存设置</button></div>
+      </div>
+    </div>
+    <div class="panel" style="max-width:560px">
+      <div class="ph"><span class="pt">📋 orders 表建表SQL（前后端联通必须执行）</span><button class="btn btn-sm" onclick="copySql('order-sql')">复制</button></div>
+      <pre id="order-sql" style="background:#1e1e1e;color:#d4d4d4;padding:16px;margin:12px 18px;border-radius:8px;font-size:12px;line-height:1.6">CREATE TABLE IF NOT EXISTS orders (
+  id            bigserial primary key,
+  local_id      text,
+  items         text,
+  address       text,
+  delivery_type text default 'delivery',
+  remark        text,
+  total_price   numeric,
+  delivery_fee  numeric default 0,
+  pay_total     numeric,
+  status        int default 0,
+  user_name     text,
+  user_phone    text,
+  user_address  text,
+  created_at    timestamptz default now()
+);</pre>
+    </div>
+
+    <div class="panel" style="max-width:560px;margin-top:14px">
+      <div class="ph"><span class="pt">📋 goods 表字段补全SQL（对准前端字段用）</span><button class="btn btn-sm" onclick="copySql('goods-sql')">复制</button></div>
+      <pre id="goods-sql" style="background:#1e1e1e;color:#d4d4d4;padding:16px;margin:12px 18px;border-radius:8px;font-size:12px;line-height:1.6">-- ① 补全 goods 表缺失字段
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS price numeric;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS original_price numeric;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS unit text DEFAULT '件';
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS category_id int2;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS stock int4 DEFAULT 0;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS stock_warn int4 DEFAULT 20;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS tags text;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS detail text;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS is_hot boolean DEFAULT true;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS is_new boolean DEFAULT true;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS status int2 DEFAULT 1;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS sold_count int4 DEFAULT 0;
+ALTER TABLE goods ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+
+-- ② 同步旧字段数据
+UPDATE goods SET price = group_price WHERE price IS NULL AND group_price IS NOT NULL;
+UPDATE goods SET status = 1 WHERE status IS NULL;
+
+-- ③ 查看 goods 表所有字段（执行后在结果里确认字段名）
+SELECT column_name, data_type, column_default
+FROM information_schema.columns
+WHERE table_schema = 'public' AND table_name = 'goods'
+ORDER BY ordinal_position;
+
+-- 开启RLS，允许所有操作（管理后台写入 + 小程序读取）
+ALTER TABLE goods ENABLE ROW LEVEL SECURITY;
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE banners ENABLE ROW LEVEL SECURITY;
+ALTER TABLE coupons ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "allow_all_goods" ON goods;
+DROP POLICY IF EXISTS "allow_all_orders" ON orders;
+DROP POLICY IF EXISTS "allow_all_banners" ON banners;
+DROP POLICY IF EXISTS "allow_all_coupons" ON coupons;
+
+CREATE POLICY "allow_all_goods" ON goods FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_orders" ON orders FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_banners" ON banners FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_coupons" ON coupons FOR ALL USING (true) WITH CHECK (true);</pre>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+const URL  = 'https://qzceawujgcaqdgpiijvb.supabase.co';
+const KEY  = 'sb_publishable_8Xiqk94BFoUBtj43LVuJBA_EHFlZ9LC';
+const HDR  = { apikey:KEY, Authorization:'Bearer '+KEY, 'Content-Type':'application/json', Prefer:'return=representation' };
+const HDRG = { apikey:KEY, Authorization:'Bearer '+KEY, Prefer:'count=exact' };
+
+async function sbGet(table, p={}) {
+  let url = `${URL}/rest/v1/${table}?select=${encodeURIComponent(p.select||'*')}`;
+  (p.filters||[]).forEach(f=>{ url+='&'+f; });
+  if(p.order) url+='&order='+p.order;
+  if(p.limit) url+='&limit='+p.limit;
+  try {
+    const r = await fetch(url,{headers:HDRG});
+    const d = await r.json().catch(()=>[]);
+    const cnt = parseInt(r.headers.get('content-range')?.split('/')[1])||0;
+    return {data:Array.isArray(d)?d:[],count:cnt,ok:r.ok};
+  } catch(e){ return {data:[],count:0,ok:false}; }
+}
+async function sbPost(table,body){
+  try{
+    const r=await fetch(`${URL}/rest/v1/${table}`,{method:'POST',headers:HDR,body:JSON.stringify(body)});
+    const data=await r.json().catch(()=>null);
+    if(!r.ok) console.error(`sbPost ${table} failed:`,r.status, data);
+    return {ok:r.ok,data};
+  }catch(e){console.error(`sbPost ${table} error:`,e);return{ok:false,data:{message:e.message}};}
+}
+async function sbPatch(table,filters,body){
+  try{
+    let url=`${URL}/rest/v1/${table}?`+filters.join('&');
+    const r=await fetch(url,{method:'PATCH',headers:{...HDR,Prefer:'return=minimal'},body:JSON.stringify(body)});
+    const data=r.ok?null:await r.json().catch(()=>null);
+    if(!r.ok) console.error(`sbPatch ${table} failed:`,r.status,data);
+    return {ok:r.ok,data};
+  }catch(e){console.error(`sbPatch ${table} error:`,e);return{ok:false,data:{message:e.message}};}
+}
+async function sbDelete(table,filters){
+  let url=`${URL}/rest/v1/${table}?`+filters.join('&');
+  const r=await fetch(url,{method:'DELETE',headers:{...HDR,Prefer:'return=minimal'}});
+  return {ok:r.ok};
+}
+
+// ===== 路由 =====
+const TITLES={dash:'数据看板',goods:'上架中商品',offgoods:'已下架商品',addgoods:'上架商品',banner:'Banner管理',orders:'订单管理',delivery:'配送管理',coupon:'优惠券',luckydraw:'幸运转盘',settings:'系统设置'};
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg)pg.classList.add('active');
+  const ni=document.querySelector(`.nav-item[data-page="${name}"]`);
+  if(ni)ni.classList.add('active');
+  document.getElementById('topbar-title').textContent=TITLES[name]||name;
+  const loaders={dash:loadDash,goods:loadGoods,offgoods:loadOffGoods,banner:loadBanners,orders:loadOrders,delivery:()=>loadDelivery('delivery'),coupon:loadCoupons,luckydraw:loadLD,settings:()=>{}};
+  if(loaders[name])loaders[name]();
+}
+document.querySelectorAll('.nav-item[data-page]').forEach(el=>el.addEventListener('click',()=>goPage(el.dataset.page)));
+
+// 订单tab点击
+document.getElementById('order-tabs').addEventListener('click',e=>{
+  const tab=e.target.closest('.otab');
+  if(!tab)return;
+  document.querySelectorAll('#order-tabs .otab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  currentOStatus=tab.dataset.st;
+  loadOrders();
+});
+
+// 时钟
+setInterval(()=>{
+  document.getElementById('tb-date').textContent=new Date().toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit'});
+},1000);
+document.getElementById('tb-date').textContent=new Date().toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit'});
+
+// ===== 状态badge =====
+const STATUS_BADGE={0:'<span class="badge bw">待付款</span>',1:'<span class="badge bi">待发货</span>',2:'<span class="badge bs">配送中</span>',3:'<span class="badge bp">待自提</span>',4:'<span class="badge bg">已完成</span>',5:'<span class="badge bd">已取消</span>'};
+const CAT=['','蔬菜','水果','肉禽','海鲜','蛋奶','粮油','豆制品','日用品'];
+
+// ===== 看板 =====
+async function loadDash(){
+  const today=new Date().toISOString().split('T')[0];
+  const {data:orders}=await sbGet('orders',{filters:['created_at=gte.'+today],select:'pay_total,status,delivery_type'});
+  const rev=orders.reduce((s,o)=>s+(parseFloat(o.pay_total)||0),0);
+  const ship=orders.filter(o=>o.delivery_type==='delivery'&&(o.status===1||o.status===2)).length;
+  const pick=orders.filter(o=>o.delivery_type==='pickup'&&o.status===3).length;
+  const pend=orders.filter(o=>o.status===0).length;
+  document.getElementById('s-rev').textContent='¥'+rev.toFixed(0);
+  document.getElementById('s-rev-t').textContent='今日共'+orders.length+'笔';
+  document.getElementById('s-ord').textContent=orders.length;
+  document.getElementById('s-ship').textContent=ship;
+  document.getElementById('s-pick').textContent=pick;
+  document.getElementById('badge-order').textContent=pend;
+  document.getElementById('notif-n').textContent=pend;
+
+  // 最新订单
+  const {data:latest}=await sbGet('orders',{order:'created_at.desc',limit:5,select:'id,items,pay_total,status,created_at,user_name'});
+  document.getElementById('dash-orders').innerHTML=latest.length?latest.map(o=>{
+    const items=typeof o.items==='string'?JSON.parse(o.items||'[]'):(o.items||[]);
+    const s=items.map(i=>i.name+'×'+i.qty).join(', ').slice(0,30)||'—';
+    const t=new Date(o.created_at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F5F5F5">
+      <span style="font-size:11px;font-weight:600;color:#444;width:80px">#${String(o.id).slice(-8)}</span>
+      <span style="flex:1;font-size:12px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s}</span>
+      <span style="color:#E02020;font-weight:600;width:52px;text-align:right">¥${o.pay_total}</span>
+      ${STATUS_BADGE[o.status]||''}
+    </div>`;
+  }).join(''):'<div style="color:#bbb;padding:16px 0;font-size:13px">暂无订单数据</div>';
+
+  // 库存预警
+  const {data:goods}=await sbGet('goods',{filters:['status=eq.1'],select:'name,stock,stock_warn',order:'stock.asc',limit:6});
+  const warns=goods.filter(g=>g.stock<=(g.stock_warn||20));
+  document.getElementById('dash-stock').innerHTML=warns.length
+    ?warns.map(g=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F5F5F5;font-size:12px"><span style="color:#555">${g.name}</span><span style="${g.stock===0?'color:#C62828':'color:#C17A00'};font-weight:500">${g.stock===0?'售罄':'库存'+g.stock+'件'}</span></div>`).join('')
+    :'<div style="color:#bbb;font-size:13px">暂无预警商品 ✓</div>';
+}
+
+// ===== 商品 =====
+async function loadGoods(){
+  const kw=document.getElementById('g-kw')?.value?.trim()||'';
+  const cat=document.getElementById('g-cat')?.value||'';
+  const filters=['status=eq.1']; // 只显示上架中
+  if(cat)filters.push('category_id=eq.'+cat);
+  if(kw)filters.push('name=ilike.*'+encodeURIComponent(kw)+'*');
+  const {data,count}=await sbGet('goods',{filters,order:'created_at.desc',limit:50});
+  const tbody=document.getElementById('goods-tbody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:#999">暂无商品</td></tr>';document.getElementById('g-count').textContent='共0件';return;}
+  tbody.innerHTML=data.map(g=>{
+    const price=g.price||g.group_price||'—';
+    const badge=g.status==1?(g.stock==0?'<span class="badge bd">售罄</span>':'<span class="badge bs">上架中</span>'):'<span class="badge bg">已下架</span>';
+    const toggleBtn=g.status==1?`<button class="ac ad" onclick="setGS(${g.id},0)">下架</button>`:`<button class="ac ao" onclick="setGS(${g.id},1)">上架</button>`;
+    return`<tr><td><div class="gc"><div class="gth">🛒</div><div><div class="gn">${g.name}</div><div class="gs">ID:${g.id}·${g.tags||''}</div></div></div></td>
+    <td style="color:#888">${CAT[g.category_id]||'—'}</td>
+    <td style="color:#E02020;font-weight:600">¥${price}</td>
+    <td style="color:#bbb;text-decoration:line-through">${g.original_price?'¥'+g.original_price:'—'}</td>
+    <td>${g.unit||'件'}</td>
+    <td style="${g.stock<=(g.stock_warn||20)?'color:#C62828;font-weight:500':''}">${g.stock??'—'}</td>
+    <td>${badge}</td>
+    <td><div class="ab"><button class="ac ae" onclick="editGoods(${g.id})">编辑</button>${toggleBtn}<button class="ac ad" onclick="delGoods(${g.id},'${g.name.replace(/'/g,'')}')">删除</button></div></td></tr>`;
+  }).join('');
+  document.getElementById('g-count').textContent=`共${count||data.length}件商品`;
+}
+
+async function setGS(id,st){const{ok}=await sbPatch('goods',['id=eq.'+id],{status:st});if(ok)loadGoods();}
+async function delGoods(id,name){
+  if(!confirm(`确认永久删除「${name}」？`))return;
+  const{ok}=await sbDelete('goods',['id=eq.'+id]);
+  if(ok)loadGoods();else alert('删除失败');
+}
+async function editGoods(id){
+  const{data}=await sbGet('goods',{filters:['id=eq.'+id]});
+  if(!data||!data[0])return;
+  const g=data[0];
+  goPage('addgoods');
+  document.getElementById('ag-id').value=g.id;
+  document.getElementById('ag-title').textContent='编辑商品';
+  document.getElementById('ag-name').value=g.name||'';
+  document.getElementById('ag-cat').value=g.category_id||1;
+  document.getElementById('ag-unit').value=g.unit||'';
+  document.getElementById('ag-price').value=g.price||g.group_price||'';
+  document.getElementById('ag-ori').value=g.original_price||'';
+  document.getElementById('ag-stock').value=g.stock||'';
+  document.getElementById('ag-warn').value=g.stock_warn||20;
+  document.getElementById('ag-tags').value=g.tags||'';
+  document.getElementById('ag-detail').value=g.detail||'';
+  document.getElementById('ag-hot').value=g.is_recommend?'true':'false';
+  document.getElementById('ag-new').value=g.is_flash?'true':'false';
+  // 恢复图片
+  const coverUrl = g.cover || '';
+  document.getElementById('ag-cover').value = coverUrl;
+  if (coverUrl) {
+    document.getElementById('ag-img-thumb').src = coverUrl;
+    document.getElementById('ag-img-thumb').style.display = 'block';
+    document.getElementById('ag-img-placeholder').style.display = 'none';
+  } else {
+    document.getElementById('ag-img-thumb').style.display = 'none';
+    document.getElementById('ag-img-placeholder').style.display = 'flex';
+  }
+}
+// ===== 图片处理 =====
+function previewAndUploadImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  // 本地预览
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('ag-img-thumb').src = e.target.result;
+    document.getElementById('ag-img-thumb').style.display = 'block';
+    document.getElementById('ag-img-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+  // 上传到 Supabase Storage
+  uploadToStorage(file);
+}
+
+function onCoverUrlInput(url) {
+  if (!url) {
+    document.getElementById('ag-img-thumb').style.display = 'none';
+    document.getElementById('ag-img-placeholder').style.display = 'flex';
+    return;
+  }
+  document.getElementById('ag-img-thumb').src = url;
+  document.getElementById('ag-img-thumb').style.display = 'block';
+  document.getElementById('ag-img-placeholder').style.display = 'none';
+}
+
+async function uploadToStorage(file) {
+  const status = document.getElementById('ag-img-status');
+  status.textContent = '上传中…';
+  status.style.color = '#E02020';
+  const ext = file.name.split('.').pop();
+  const fname = `goods/${Date.now()}.${ext}`;
+  try {
+    const r = await fetch(`${URL}/storage/v1/object/goods-images/${fname}`, {
+      method: 'POST',
+      headers: {
+        apikey: KEY,
+        Authorization: `Bearer ${KEY}`,
+        'Content-Type': file.type,
+        'x-upsert': 'true',
+      },
+      body: file,
+    });
+    if (r.ok) {
+      const publicUrl = `${URL}/storage/v1/object/public/goods-images/${fname}`;
+      document.getElementById('ag-cover').value = publicUrl;
+      status.textContent = '✅ 上传成功';
+      status.style.color = '#2E7D32';
+    } else {
+      const err = await r.json().catch(()=>({}));
+      // Storage bucket可能不存在，显示提示
+      if (err.error === 'Bucket not found' || r.status === 400) {
+        status.textContent = '⚠️ 请先在Supabase创建Storage bucket: goods-images（公开访问）';
+      } else {
+        status.textContent = '上传失败：' + (err.message || r.status);
+      }
+      status.style.color = '#E02020';
+      console.error('Storage upload failed:', err);
+    }
+  } catch(e) {
+    status.textContent = '网络错误，请填写图片URL';
+    status.style.color = '#999';
+  }
+}
+
+async function submitGoods(status){
+  const name=document.getElementById('ag-name').value.trim();
+  const price=document.getElementById('ag-price').value;
+  const stock=document.getElementById('ag-stock').value;
+  const unit=document.getElementById('ag-unit').value.trim();
+  if(!name){alert('请填写商品名称');return;}
+  if(!price){alert('请填写售价');return;}
+  if(!stock){alert('请填写库存');return;}
+  if(!unit){alert('请填写计量单位');return;}
+  // 构建 payload，兼容新旧字段名
+  const oriVal=document.getElementById('ag-ori').value;
+  const payload={
+    name,
+    category_id:Number(document.getElementById('ag-cat').value),
+    unit,
+    price:Number(price),
+    group_price:Number(price),
+    original_price:oriVal?Number(oriVal):null,
+    stock:Number(stock),
+    stock_warn:Number(document.getElementById('ag-warn').value)||20,
+    tags:document.getElementById('ag-tags').value.trim()||null,
+    detail:document.getElementById('ag-detail').value.trim()||null,
+    spec:unit,
+    cover:document.getElementById('ag-cover').value.trim()||null,
+    is_recommend:document.getElementById('ag-hot').value==='true'?1:0,
+    is_flash:document.getElementById('ag-new').value==='true'?1:0,
+    status,
+    updated_at:new Date().toISOString(),
+  };
+  Object.keys(payload).forEach(k=>{ if(payload[k]===null||payload[k]==='') delete payload[k]; });
+  const id=document.getElementById('ag-id').value;
+  let result;
+  if(id){
+    result=await sbPatch('goods',['id=eq.'+id],payload);
+  }else{
+    result=await sbPost('goods',payload);
+  }
+  if(result.ok){
+    alert(status===1?'✅ 商品上架成功！':'✅ 已保存草稿');
+    ['ag-id','ag-name','ag-unit','ag-price','ag-ori','ag-stock','ag-warn','ag-tags','ag-detail','ag-cover'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+  document.getElementById('ag-img-thumb').style.display='none';
+  document.getElementById('ag-img-placeholder').style.display='flex';
+  document.getElementById('ag-img-status').textContent='图片存储到 Supabase Storage';
+    document.getElementById('ag-title').textContent='上架新商品';
+    goPage('goods');
+  }else{
+    // 读取具体错误信息
+    const errDetail = result.data ? JSON.stringify(result.data) : '未知错误';
+    console.error('上架失败:', errDetail);
+    alert('上架失败\n\n错误：' + errDetail + '\n\n请先在系统设置页执行"一键修复SQL"');
+  }
+}
+
+// ===== Banner =====
+async function loadBanners(){
+  const{data}=await sbGet('banners',{order:'sort_order.asc'});
+  const tbody=document.getElementById('banner-tbody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:#999">暂无Banner，请先执行建表SQL</td></tr>';return;}
+  tbody.innerHTML=data.map(b=>`<tr>
+    <td><div style="width:90px;height:46px;background:${b.bg_color||'#E02020'};border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px">${b.emoji||'🛒'}</div></td>
+    <td style="font-weight:500">${b.title}</td><td style="font-size:12px;color:#888">${b.subtitle||'—'}</td>
+    <td style="font-size:12px">${b.link_id?'商品#'+b.link_id:'商品列表'}</td>
+    <td><input type="number" value="${b.sort_order||1}" onchange="sbPatch('banners',['id=eq.${b.id}'],{sort_order:parseInt(this.value)||1})" style="width:50px;border:1px solid #DDD;border-radius:4px;padding:3px 6px;font-size:12px"/></td>
+    <td>${(b.enabled||b.status===1)?'<span class="badge bs">展示中</span>':'<span class="badge bg">已停用</span>'}</td>
+    <td><div class="ab"><button class="ac ae" onclick="editBanner(${b.id})">编辑</button>${(b.enabled||b.status===1)?`<button class="ac ad" onclick="sbPatch('banners',['id=eq.${b.id}'],{enabled:false,status:0}).then(loadBanners)">停用</button>`:`<button class="ac ao" onclick="sbPatch('banners',['id=eq.${b.id}'],{enabled:true,status:1}).then(loadBanners)">启用</button>`}<button class="ac ad" onclick="delBanner(${b.id},'${b.title}')">删除</button></div></td>
+  </tr>`).join('');
+}
+function openBannerForm(d){
+  document.getElementById('banner-form').style.display='block';
+  document.getElementById('bf-title-label').textContent=d?'编辑Banner':'新增Banner';
+  document.getElementById('bf-id').value=d?d.id:'';
+  document.getElementById('bf-title').value=d?d.title:'';
+  document.getElementById('bf-sub').value=d?d.subtitle||'':'';
+  document.getElementById('bf-emoji').value=d?d.emoji||'🛒':'🛒';
+  document.getElementById('bf-color').value=d?d.bg_color||'#E02020':'#E02020';
+  document.getElementById('bf-cpicker').value=d?d.bg_color||'#E02020':'#E02020';
+  document.getElementById('bf-linkid').value=d?d.link_id||'':'';
+  document.getElementById('bf-sort').value=d?d.sort_order||1:1;
+}
+async function editBanner(id){const{data}=await sbGet('banners',{filters:['id=eq.'+id]});if(data&&data[0])openBannerForm(data[0]);}
+async function saveBanner(){
+  const title=document.getElementById('bf-title').value.trim();
+  if(!title){alert('请填写标题');return;}
+  const id=document.getElementById('bf-id').value;
+  const p={
+    title,
+    subtitle: document.getElementById('bf-sub').value||null,
+    emoji:    document.getElementById('bf-emoji').value||'🛒',
+    bg_color: document.getElementById('bf-color').value||'#E02020',
+    link_id:  parseInt(document.getElementById('bf-linkid').value)||null,
+    sort_order: parseInt(document.getElementById('bf-sort').value)||1,
+    status:   1,
+    enabled:  true,
+  };
+  Object.keys(p).forEach(k=>{ if(p[k]===null) delete p[k]; });
+  const{ok}=id?await sbPatch('banners',['id=eq.'+id],p):await sbPost('banners',p);
+  if(ok){alert('✅ 保存成功');document.getElementById('banner-form').style.display='none';loadBanners();}else alert('保存失败，请先建表');
+}
+async function delBanner(id,name){if(!confirm('删除Banner「'+name+'」？'))return;const{ok}=await sbDelete('banners',['id=eq.'+id]);if(ok)loadBanners();}
+
+// ===== 订单 =====
+let currentOStatus='';
+async function loadOrders(){
+  const kw=document.getElementById('o-kw')?.value?.trim()||'';
+  const filters=[];
+  if(currentOStatus!=='')filters.push('status=eq.'+currentOStatus);
+  if(kw)filters.push(`or=(local_id.ilike.*${kw}*,user_phone.ilike.*${kw}*)`);
+  const{data,count,ok}=await sbGet('orders',{filters,order:'created_at.desc',limit:100});
+  const tbody=document.getElementById('orders-tbody');
+  if(!ok||(!data.length&&count===0)){
+    tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:40px"><div style="color:#E02020;font-weight:500;margin-bottom:10px">⚠️ 无法读取订单（orders表未建或无数据）</div><button class="btn btn-primary btn-sm" onclick="goPage('settings')">去建表</button></td></tr>`;
+    document.getElementById('o-count').textContent='请先建表';return;
+  }
+  if(!data.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:#999">暂无订单</td></tr>';document.getElementById('o-count').textContent='共0笔';return;}
+  let total=0;
+  tbody.innerHTML=data.map(o=>{
+    total+=parseFloat(o.pay_total||0);
+    const items=typeof o.items==='string'?JSON.parse(o.items||'[]'):(o.items||[]);
+    const s=items.map(i=>i.name+'×'+i.qty).join(',').slice(0,24)||'—';
+    const addr=o.address?JSON.parse(typeof o.address==='string'?o.address:'{}'):null;
+    const addrStr=addr?`${addr.name||''} ${addr.tel||''} / ${addr.region||''}${addr.detail||''}`:o.user_address||'自提';
+    const dt=new Date(o.created_at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return`<tr>
+      <td style="font-size:12px;font-weight:600">#${String(o.id).slice(-10)}</td>
+      <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${addrStr}">${addrStr}</td>
+      <td style="font-size:12px;color:#666">${s}</td>
+      <td style="color:#E02020;font-weight:600">¥${o.pay_total}</td>
+      <td style="font-size:12px">${o.delivery_type==='delivery'?'🚚送上门':'🏪自提'}</td>
+      <td style="font-size:12px;color:#bbb">${dt}</td>
+      <td>${STATUS_BADGE[o.status]||'—'}</td>
+      <td><div class="ab">
+        ${o.status===0?`<button class="ac ao" onclick="advOrder(${o.id},1)">接单</button>`:''}
+        ${o.status===1&&o.delivery_type==='delivery'?`<button class="ac" style="border-color:#4527A0;color:#4527A0" onclick="advOrder(${o.id},2)">发货</button>`:''}
+        ${o.status===1&&o.delivery_type==='pickup'?`<button class="ac" style="border-color:#4527A0;color:#4527A0" onclick="advOrder(${o.id},3)">通知自提</button>`:''}
+        ${o.status===2||o.status===3?`<button class="ac ao" onclick="advOrder(${o.id},4)">完成</button>`:''}
+        ${o.status===0?`<button class="ac ad" onclick="advOrder(${o.id},5)">取消</button>`:''}
+      </div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('o-count').textContent=`共${count||data.length}笔 · 总额¥${total.toFixed(2)}`;
+}
+async function advOrder(id,st){
+  const labels={1:'确认接单',2:'标记发货',3:'通知自提',4:'标记完成',5:'取消订单'};
+  if(!confirm(labels[st]+'？'))return;
+  const{ok}=await sbPatch('orders',['id=eq.'+id],{status:st});
+  if(ok)loadOrders();else alert('操作失败');
+}
+
+// ===== 配送 =====
+let delType='delivery';
+async function loadDelivery(type,el){
+  delType=type;
+  if(el){document.querySelectorAll('#page-delivery .otab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+  const stFilter=type==='delivery'?'status=in.(1,2)':'status=in.(1,3)';
+  const{data}=await sbGet('orders',{filters:['delivery_type=eq.'+type,stFilter],order:'created_at.asc',limit:100});
+  const tbody=document.getElementById('delivery-tbody');
+  if(!data.length){tbody.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:40px;color:#999">暂无${type==='delivery'?'配送':'自提'}订单</td></tr>`;document.getElementById('del-count').textContent='共0笔';return;}
+  tbody.innerHTML=data.map(o=>{
+    const addr=o.address?JSON.parse(typeof o.address==='string'?o.address:'{}'):null;
+    const items=typeof o.items==='string'?JSON.parse(o.items||'[]'):(o.items||[]);
+    const s=items.map(i=>i.name+'×'+i.qty).join(' / ');
+    const dt=new Date(o.created_at).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return`<tr>
+      <td><input type="checkbox" class="del-cb" data-id="${o.id}"/></td>
+      <td style="font-size:12px;font-weight:600">#${String(o.id).slice(-8)}</td>
+      <td style="font-size:12px">${addr?.name||o.user_name||'—'}<br><span style="color:#bbb">${addr?.tel||o.user_phone||''}</span></td>
+      <td style="font-size:12px;color:#555">${addr?(addr.region||'')+(addr.detail||''):o.user_address||'自提'}</td>
+      <td style="font-size:12px;color:#666">${s}</td>
+      <td style="color:#E02020;font-weight:600">¥${o.pay_total}</td>
+      <td style="font-size:12px;color:#bbb">${dt}</td>
+      <td>${STATUS_BADGE[o.status]||''}</td>
+      <td><div class="ab">
+        ${o.status===1?`<button class="ac" style="border-color:#4527A0;color:#4527A0" onclick="advOrder(${o.id},${type==='delivery'?2:3})">${type==='delivery'?'发货':'通知自提'}</button>`:''}
+        ${o.status===2||o.status===3?`<button class="ac ao" onclick="advOrder(${o.id},4).then(()=>loadDelivery('${type}'))">完成</button>`:''}
+      </div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('del-count').textContent=`共${data.length}笔`;
+}
+function toggleDelAll(cb){document.querySelectorAll('.del-cb').forEach(c=>c.checked=cb.checked);}
+async function batchShip(){
+  const ids=[...document.querySelectorAll('.del-cb:checked')].map(c=>c.dataset.id);
+  if(!ids.length){alert('请先勾选要操作的订单');return;}
+  if(!confirm(`批量操作${ids.length}笔订单？`))return;
+  const newSt=delType==='delivery'?2:3;
+  for(const id of ids)await sbPatch('orders',['id=eq.'+id],{status:newSt});
+  loadDelivery(delType);
+}
+
+// ===== 优惠券 =====
+async function loadCoupons(){
+  const{data}=await sbGet('coupons',{order:'created_at.desc'});
+  const tbody=document.getElementById('coupon-tbody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:#999">暂无优惠券，请先建表</td></tr>';return;}
+  tbody.innerHTML=data.map(c=>`<tr>
+    <td style="font-weight:500">🎫 ${c.name}</td>
+    <td style="color:#E02020;font-weight:600">¥${c.amount}</td>
+    <td style="font-size:12px">满¥${c.min_order}</td>
+    <td style="font-size:12px;color:#bbb">${c.expire_at||'长期有效'}</td>
+    <td style="font-size:12px">${c.scope||'全场通用'}</td>
+    <td>${c.status===1?'<span class="badge bs">发放中</span>':'<span class="badge bg">已停止</span>'}</td>
+    <td><div class="ab">
+      ${c.status===1?`<button class="ac ad" onclick="setCouponStatus(${c.id},0)">停止</button>`:`<button class="ac ao" onclick="setCouponStatus(${c.id},1)">启用</button>`}
+      <button class="ac ad" onclick="delCoupon(${c.id},'${c.name}')">删除</button>
+    </div></td>
+  </tr>`).join('');
+}
+function openCouponForm(){document.getElementById('coupon-form').style.display='block';}
+async function saveCoupon(){
+  const name=document.getElementById('cf-name').value.trim();
+  const amt=document.getElementById('cf-amt').value;
+  if(!name||!amt){alert('请填写券名和面值');return;}
+  const p={name,amount:Number(amt),min_order:Number(document.getElementById('cf-min').value)||0,total_count:Number(document.getElementById('cf-total').value)||1000,expire_at:document.getElementById('cf-exp').value||null,scope:document.getElementById('cf-scope').value||'全场通用',status:1};
+  const id=document.getElementById('cf-id').value;
+  const{ok}=id?await sbPatch('coupons',['id=eq.'+id],p):await sbPost('coupons',p);
+  if(ok){alert('✅ 优惠券创建成功');document.getElementById('coupon-form').style.display='none';loadCoupons();}else alert('失败，请先建立coupons表');
+}
+async function setCouponStatus(id,st){await sbPatch('coupons',['id=eq.'+id],{status:st});loadCoupons();}
+async function delCoupon(id,name){if(!confirm('删除优惠券「'+name+'」？'))return;await sbDelete('coupons',['id=eq.'+id]);loadCoupons();}
+
+// ===== 幸运转盘 =====
+let ldEnabled=false;
+async function loadLD(){
+  const{data:cfg}=await sbGet('lucky_draw_config',{filters:['id=eq.1']});
+  if(cfg&&cfg[0]){
+    ldEnabled=cfg[0].enabled;
+    document.getElementById('ld-title').value=cfg[0].title||'';
+    document.getElementById('ld-sub').value=cfg[0].subtitle||'';
+    document.getElementById('ld-daily').value=cfg[0].daily_limit||1;
+    document.getElementById('ld-extra').value=cfg[0].share_extra||2;
+    updateLDUI(cfg[0].enabled);
+  }
+  loadPrizes();
+}
+function updateLDUI(on){
+  const btn=document.getElementById('ld-toggle-btn'),txt=document.getElementById('ld-status-txt');
+  if(on){btn.textContent='关闭活动';btn.className='btn btn-sm ad';btn.style.cssText='padding:5px 12px;font-size:12px;border-radius:7px;border:1px solid #B71C1C;background:transparent;color:#B71C1C;cursor:pointer';txt.textContent='🟢 活动进行中';txt.style.color='#2E7D32';}
+  else{btn.textContent='开启活动';btn.className='btn btn-primary btn-sm';btn.style.cssText='';txt.textContent='⚫ 活动已关闭';txt.style.color='#999';}
+}
+async function toggleLD(){
+  const v=!ldEnabled;
+  const{ok}=await sbPatch('lucky_draw_config',['id=eq.1'],{enabled:v,updated_at:new Date().toISOString()});
+  if(ok){ldEnabled=v;updateLDUI(v);alert(v?'✅ 活动已开启':'⏹ 活动已关闭');}else alert('操作失败，请先建表');
+}
+async function saveLDConfig(){
+  const p={title:document.getElementById('ld-title').value||'新人专享福利',subtitle:document.getElementById('ld-sub').value||'限时领取·今日有效',daily_limit:parseInt(document.getElementById('ld-daily').value)||1,share_extra:parseInt(document.getElementById('ld-extra').value)||2,updated_at:new Date().toISOString()};
+  const{ok}=await sbPatch('lucky_draw_config',['id=eq.1'],p);
+  alert(ok?'✅ 配置已保存':'❌ 保存失败');
+}
+async function loadPrizes(){
+  const{data}=await sbGet('lucky_draw_prizes',{order:'sort_order.asc'});
+  const tbody=document.getElementById('prizes-tbody');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:#999">暂无奖品，请先执行建表SQL</td></tr>';return;}
+  const total=data.reduce((s,p)=>s+(p.probability||0),0);
+  tbody.innerHTML=data.map(p=>{
+    const pct=total>0?((p.probability/total)*100).toFixed(1):0;
+    const type={coupon:'优惠券',points:'积分',retry:'再抽一次',empty:'谢谢参与'}[p.type]||p.type;
+    return`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px"><div style="width:36px;height:36px;background:${p.color||'#FFF0F0'};border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">${p.emoji}</div><span style="font-weight:500">${p.name}</span></div></td>
+      <td><span class="badge bi">${type}</span></td>
+      <td style="color:#E02020;font-weight:600">${p.type==='coupon'&&p.value>0?'¥'+p.value:p.type==='points'?'+'+p.value+'分':'—'}</td>
+      <td style="font-size:12px;color:#888">${p.min_order>0?'满¥'+p.min_order:'无门槛'}</td>
+      <td><b>${p.probability}</b></td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;background:#F0F0F0;border-radius:4px;height:6px;overflow:hidden"><div style="height:6px;background:#E02020;border-radius:4px;width:${Math.min(100,pct)}%"></div></div><span style="font-size:11px;color:#888;width:36px">${pct}%</span></div></td>
+      <td>${p.enabled?'<span class="badge bs">启用</span>':'<span class="badge bg">禁用</span>'}</td>
+      <td><div class="ab"><button class="ac ae" onclick="editPrize(${p.id})">编辑</button>${p.enabled?`<button class="ac ad" onclick="togglePrize(${p.id},false)">禁用</button>`:`<button class="ac ao" onclick="togglePrize(${p.id},true)">启用</button>`}<button class="ac ad" onclick="delPrize(${p.id},'${p.name}')">删除</button></div></td>
+    </tr>`;
+  }).join('');
+}
+function openPrizeForm(d){
+  const panel=document.getElementById('prize-form-panel');panel.style.display='block';panel.scrollIntoView({behavior:'smooth'});
+  document.getElementById('pf-title').textContent=d?'编辑奖品':'新增奖品';
+  document.getElementById('pf-id').value=d?d.id:'';
+  document.getElementById('pf-name').value=d?d.name:'';
+  document.getElementById('pf-emoji').value=d?d.emoji:'🎁';
+  document.getElementById('pf-type').value=d?d.type:'coupon';
+  document.getElementById('pf-val').value=d?d.value:'';
+  document.getElementById('pf-min').value=d?d.min_order:'';
+  document.getElementById('pf-prob').value=d?d.probability:10;
+  document.getElementById('pf-color').value=d?d.color:'#FFF0F0';
+  document.getElementById('pf-cpicker').value=d?d.color:'#FFF0F0';
+  document.getElementById('pf-sort').value=d?d.sort_order:99;
+  onPrizeType();
+}
+function onPrizeType(){
+  const t=document.getElementById('pf-type').value;
+  const vw=document.getElementById('pf-val-wrap'),mw=document.getElementById('pf-min-wrap'),vl=document.getElementById('pf-val-lbl');
+  if(t==='coupon'){vw.style.display='';mw.style.display='';vl.textContent='面值（元）';}
+  else if(t==='points'){vw.style.display='';mw.style.display='none';vl.textContent='积分数量';}
+  else{vw.style.display='none';mw.style.display='none';}
+}
+async function editPrize(id){const{data}=await sbGet('lucky_draw_prizes',{filters:['id=eq.'+id]});if(data&&data[0])openPrizeForm(data[0]);}
+async function togglePrize(id,en){await sbPatch('lucky_draw_prizes',['id=eq.'+id],{enabled:en});loadPrizes();}
+async function delPrize(id,name){if(!confirm('删除奖品「'+name+'」？'))return;await sbDelete('lucky_draw_prizes',['id=eq.'+id]);loadPrizes();}
+async function savePrize(){
+  const name=document.getElementById('pf-name').value.trim();if(!name){alert('请填写奖品名称');return;}
+  const id=document.getElementById('pf-id').value;
+  const p={name,emoji:document.getElementById('pf-emoji').value||'🎁',type:document.getElementById('pf-type').value,value:parseFloat(document.getElementById('pf-val').value)||0,min_order:parseFloat(document.getElementById('pf-min').value)||0,probability:parseInt(document.getElementById('pf-prob').value)||10,color:document.getElementById('pf-color').value||'#FFF0F0',sort_order:parseInt(document.getElementById('pf-sort').value)||99,enabled:true};
+  const{ok}=id?await sbPatch('lucky_draw_prizes',['id=eq.'+id],p):await sbPost('lucky_draw_prizes',p);
+  if(ok){alert('✅ 保存成功');document.getElementById('prize-form-panel').style.display='none';loadPrizes();}else alert('保存失败');
+}
+
+// ===== 系统设置 =====
+function saveSettings(){localStorage.setItem('shop_settings',JSON.stringify({name:document.getElementById('set-name').value,phone:document.getElementById('set-phone').value,fee:document.getElementById('set-fee').value,free:document.getElementById('set-free').value,range:document.getElementById('set-range').value,pickup:document.getElementById('set-pickup').value}));alert('✅ 已保存');}
+
+// ===== 工具 =====
+function copySql(id){navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>alert('SQL已复制，粘贴到Supabase SQL编辑器执行'));}
+
+// ===== 已下架商品 =====
+async function loadOffGoods(){
+  const kw=document.getElementById('og-kw')?.value?.trim()||'';
+  const cat=document.getElementById('og-cat')?.value||'';
+  const filters=['status=eq.0'];
+  if(cat)filters.push('category_id=eq.'+cat);
+  if(kw)filters.push('name=ilike.*'+encodeURIComponent(kw)+'*');
+  const{data,count}=await sbGet('goods',{filters,order:'updated_at.desc,created_at.desc',limit:100});
+  const tbody=document.getElementById('offgoods-tbody');
+  if(!data.length){
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:40px;color:#999">暂无已下架商品</td></tr>';
+    document.getElementById('og-count').textContent='共0件';
+    return;
+  }
+  tbody.innerHTML=data.map(g=>`<tr>
+    <td><input type="checkbox" class="og-cb" data-id="${g.id}"/></td>
+    <td><div class="gc"><div class="gth">🛒</div><div>
+      <div class="gn">${g.name}</div>
+      <div class="gs">ID:${g.id} · ${CAT[g.category_id]||'—'}</div>
+    </div></div></td>
+    <td style="color:#888">${CAT[g.category_id]||'—'}</td>
+    <td style="color:#999">¥${g.price||g.group_price||'—'}</td>
+    <td style="color:#999">${g.stock??'—'}</td>
+    <td style="font-size:12px;color:#bbb">${g.updated_at?new Date(g.updated_at).toLocaleDateString('zh-CN'):'—'}</td>
+    <td><div class="ab">
+      <button class="ac ae" onclick="editGoods(${g.id})">编辑</button>
+      <button class="ac ao" onclick="setGS(${g.id},1).then(()=>{loadOffGoods();loadGoods()})">重新上架</button>
+      <button class="ac ad" onclick="delGoods(${g.id},'${g.name.replace(/'/g,'')}')">永久删除</button>
+    </div></td>
+  </tr>`).join('');
+  document.getElementById('og-count').textContent=`共${count||data.length}件已下架商品`;
+}
+
+function toggleOGAll(cb){document.querySelectorAll('.og-cb').forEach(c=>c.checked=cb.checked);}
+
+async function batchRestore(){
+  const ids=[...document.querySelectorAll('.og-cb:checked')].map(c=>c.dataset.id);
+  if(!ids.length){alert('请先勾选商品');return;}
+  if(!confirm(`批量重新上架 ${ids.length} 件商品？`))return;
+  for(const id of ids) await sbPatch('goods',['id=eq.'+id],{status:1});
+  loadOffGoods(); loadGoods();
+  alert(`✅ 已上架 ${ids.length} 件商品`);
+}
+
+async function batchDelete(){
+  const ids=[...document.querySelectorAll('.og-cb:checked')].map(c=>c.dataset.id);
+  if(!ids.length){alert('请先勾选商品');return;}
+  if(!confirm(`永久删除 ${ids.length} 件商品？此操作不可恢复！`))return;
+  for(const id of ids) await sbDelete('goods',['id=eq.'+id]);
+  loadOffGoods();
+  alert(`已删除 ${ids.length} 件商品`);
+}
+
+// ===== 每60秒刷新待付款角标
+setInterval(async()=>{
+  try{const{data}=await sbGet('orders',{filters:['status=eq.0'],select:'id'});const n=data?data.length:0;document.getElementById('badge-order').textContent=n;document.getElementById('notif-n').textContent=n;}catch(e){}
+},60000);
+
+// 初始化
+loadDash();
+</script>
+</body>
+</html>
